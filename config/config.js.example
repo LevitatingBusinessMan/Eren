@@ -1,0 +1,10 @@
+module.exports = {
+    "domain": "example.com",
+    "protocol": "http",
+    "keys": ["pass"],
+    "services": {
+        "image": true,
+        "code": true,
+        "urls": true
+    }
+}
