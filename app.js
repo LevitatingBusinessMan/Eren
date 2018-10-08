@@ -50,7 +50,7 @@ app.post("/image", (req,res) => {
     if (!req.files.image)
         return res.send("No image!");
     let file = req.files.image;
-    if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png")
+    if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png" && file.mimetype !== "image/gif")
         return res.send("Invalid image type!");
     let filename = `${newID()}.${file.mimetype.substr("image/".length)}`;
     file.mv(path.join(__dirname, 'images', filename));
