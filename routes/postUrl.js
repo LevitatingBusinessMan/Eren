@@ -1,8 +1,7 @@
-const r = require("rethinkdb");
 const config = require("../config/config");
 const newID = require("../idCreator");
 
-module.exports = conn => (req, res) => {
+module.exports = enmap => (req, res) => {
     
     if (!req.query)
         return res.send("Missing key!");
@@ -22,9 +21,10 @@ module.exports = conn => (req, res) => {
 
     let pass = req.query.pass;
 
-    if (!pass)
-        r.table("urls").insert({id, url: req.query.url}).run(conn);
-    else
-        r.table("urls").insert({id, url: req.query.url, pass}).run(conn);
+    enmap.set(id,{
+        type: "url",
+        url: req.query.url,
+        pass
+    });
     res.send(`${config.protocol}://url.${config.domain}/${id}`)
 }

@@ -1,5 +1,8 @@
-const r = require("rethinkdb");
-
-module.exports = conn => (req,res) => {
-    r.table("urls").get(req.params.id)
+module.exports = enmap => (req,res) => {
+    let obj = enmap.get(req.params.id);
+    if (!obj)
+        res.render("index", {message: "url not found"});
+    else if (!obj.url)
+        res.render("index", {message: "url not found"});
+    else res.redirect(obj.url.includes("://") ? obj.url : `http://${obj.url}`);
 }

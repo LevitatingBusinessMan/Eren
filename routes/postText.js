@@ -3,6 +3,8 @@ const newID = require("../idCreator");
 
 module.exports = r => (req, res) => {
 
+    if (!req.query)
+        return res.send("Missing key!");
     if (!req.query.key)
         return res.send("Missing key!");
     if (!config.keys.includes(req.query.key))

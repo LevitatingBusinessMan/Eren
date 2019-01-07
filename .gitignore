@@ -3,3 +3,4 @@ config/config.js
 data
 images/*
 node_modules
+build
