@@ -8,6 +8,7 @@ const config = require(path.join(__dirname, "config/config.js"));
 const app = express();
 app.use(fileUpload());
 app.use(express.static(path.join(__dirname, 'images')));
+app.set("views", path.join(__dirname, 'views'));
 app.set('view engine', 'pug')
 
 app.get("/", (req,res) => {
@@ -51,4 +52,4 @@ app.post("/s/text", postText);
 const postUrl = require(path.join(__dirname, 'routes/postUrl.js'))(enmap) //uses db
 app.post("/s/url", postUrl);
 
-app.listen(80);
+app.listen(config.port);

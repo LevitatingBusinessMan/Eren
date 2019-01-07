@@ -4,3 +4,4 @@ data
 images/*
 node_modules
 build
+pm2

@@ -24,7 +24,8 @@ module.exports = enmap => (req, res) => {
     enmap.set(id,{
         type: "url",
         url: req.body.url,
-        pass
+        pass,
+        key: req.body.key
     });
     res.send(`${config.protocol}://url.${config.domain}/${id}`)
 }
