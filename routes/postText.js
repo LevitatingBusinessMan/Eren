@@ -12,7 +12,7 @@ module.exports = enmap => (req, res) => {
 
     if (!req.body.text)
         return res.send("No text!");
-    if (req.body.text.length > 1000)
+    if (req.body.text.length > 10000)
         return res.status(400).send("Text over 1000 characters");
 
     let id = newID();
