@@ -3,27 +3,27 @@ const newID = require("../idCreator");
 
 module.exports = enmap => (req, res) => {
     
-    if (!req.query)
-        return res.send("Missing key!");
-    if (!req.query.key)
-        return res.send("Missing key!");
-    if (!config.keys.includes(req.query.key))
-        return res.send("Invalid key!");
+    if (!req.body)
+        return res.status(400).send("Missing key!");
+    if (!req.body.key)
+        return res.status(400).send("Missing key!");
+    if (!config.keys.includes(req.body.key))
+        return res.status(400).send("Invalid key!");
 
-    if (!req.query.url)
-        return res.send("No url supplied!");
+    if (!req.body.url)
+        return res.status(400).send("No url supplied!");
 
     //https://regexr.com/3tfih
-    if (!/(((http)|(https)):\/\/)?(\w+:)?([a-z0-9@]+\.)+[a-z0-9]+(:\d+)?((\/[\w()?=&#-%-\S]+)+)?/.test(req.query.url))
-        return res.send("Invalid url!");
+    if (!/(((http)|(https)):\/\/)?(\w+:)?([a-z0-9@]+\.)+[a-z0-9]+(:\d+)?((\/[\w()?=&#-%-\S]+)+)?/.test(req.body.url))
+        return res.status(400).send("Invalid url!");
 
     let id = newID();
 
-    let pass = req.query.pass;
+    let pass = req.body.pass;
 
     enmap.set(id,{
         type: "url",
-        url: req.query.url,
+        url: req.body.url,
         pass
     });
     res.send(`${config.protocol}://url.${config.domain}/${id}`)

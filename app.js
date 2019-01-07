@@ -43,12 +43,12 @@ app.get("/:id", (req,res) => {
 
 //POST
 const postImage = require(path.join(__dirname, 'routes/postImage.js'))
-app.post("/image", postImage);
+app.post("/s/image", postImage);
 
 const postText = require(path.join(__dirname, 'routes/postText.js'))(enmap) //uses db
-app.post("/text", postText);
+app.post("/s/text", postText);
 
 const postUrl = require(path.join(__dirname, 'routes/postUrl.js'))(enmap) //uses db
-app.post("/url", postUrl);
+app.post("/s/url", postUrl);
 
 app.listen(80);

@@ -1,5 +1,6 @@
 module.exports = enmap => (req,res) => {
     let obj = enmap.get(req.params.id);
+    console.log(obj)
     if (!obj)
         res.render("index", {message: "url not found"});
     else if (!obj.url)
