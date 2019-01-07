@@ -20,6 +20,7 @@ if (!fs.existsSync(path.join(__dirname,'images')))
 
 const enmap = new Enmap({
     name: "data",
+    dataDir: path.join(__dirname,'data'),
     fetchAll: false
 });
 
