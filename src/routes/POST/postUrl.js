@@ -1,6 +1,6 @@
 const path = require("path");
-const config = require(path.join(__dirname, "../../config/config"));
-const newID = require(path.join(__dirname, "../util/idCreator"));
+const config = require(path.join(__dirname, "../../../config/config"));
+const newID = require(path.join(__dirname, "../../util/idCreator"));
 
 module.exports = enmap => (req, res) => {
     
@@ -9,7 +9,7 @@ module.exports = enmap => (req, res) => {
     if (!req.body.key)
         return res.status(400).send("Missing key!");
     if (!config.keys.includes(req.body.key))
-        return res.status(400).send("Invalid key!");
+        return res.status(401).send("Invalid key!");
 
     if (!req.body.url)
         return res.status(400).send("No url supplied!");
@@ -19,16 +19,17 @@ module.exports = enmap => (req, res) => {
         return res.status(400).send("Invalid url!");
 
     let id = newID();
-    let pass = req.body.pass;
+    del_key = newID();
     enmap.set(id,{
         type: "url",
         url: req.body.url,
-        pass,
-        key: req.body.key
+        key: req.body.key,
+        del_key
     });
 
     const response = {
-        url: `${config.protocol}://${config.prefix.url}.${config.domain}/${id}`
+        url: `${config.protocol}://${config.prefix.url}.${config.domain}/${id}`,
+        delete: `${config.protocol}://${config.domain}/delete/${id}/${del_key}`
     }
 
     res.send(JSON.stringify(response));

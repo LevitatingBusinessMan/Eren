@@ -8,7 +8,7 @@ const config = require(path.join(__dirname, "../config/config"));
 const app = express();
 app.use(fileUpload());
 app.use(express.static(path.join(__dirname, '../images')));
-app.set("views", path.join(__dirname, '../views'));
+app.set("views", path.join(__dirname, 'views'));
 app.set('view engine', 'pug')
 
 app.get("/", (req,res) => {
@@ -25,9 +25,9 @@ const enmap = new Enmap({
 });
 
 //GET
-const getText = require(path.join(__dirname, 'routes/getText.js'))(enmap); //uses db
-const getUrl = require(path.join(__dirname, 'routes/getUrl.js'))(enmap); //uses db
-const getImage = require(path.join(__dirname, 'routes/getImage.js'));
+const getText = require(path.join(__dirname, 'routes/GET/getText.js'))(enmap); //uses db
+const getUrl = require(path.join(__dirname, 'routes/GET/getUrl.js'))(enmap); //uses db
+const getImage = require(path.join(__dirname, 'routes/GET/getImage.js'));
 
 app.get("/:id", (req,res) => {
 
@@ -45,15 +45,17 @@ app.get("/:id", (req,res) => {
 
 let serviceNotEnabled = (req, res) => res.status("400").send("This service is not enabled");
 
+const delete_ = require(path.join(__dirname, 'routes/GET/delete.js'))(enmap)
+app.get("/delete/:id/:del_key", delete_);
+
 //POST
-const postImage = require(path.join(__dirname, 'routes/postImage.js'))
+const postImage = require(path.join(__dirname, 'routes/POST/postImage.js'))(enmap)
 app.post("/s/image", config.services.image ? postImage : serviceNotEnabled);
 
-const postText = require(path.join(__dirname, 'routes/postText.js'))(enmap) //uses db
+const postText = require(path.join(__dirname, 'routes/POST/postText.js'))(enmap)
 app.post("/s/text", config.services.text ? postText : serviceNotEnabled);
 
-const postUrl = require(path.join(__dirname, 'routes/postUrl.js'))(enmap) //uses db
+const postUrl = require(path.join(__dirname, 'routes/POST/postUrl.js'))(enmap)
 app.post("/s/url", config.services.url ? postUrl : serviceNotEnabled);
-
 
 app.listen(config.port);
