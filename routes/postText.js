@@ -21,5 +21,10 @@ module.exports = enmap => (req, res) => {
         text: req.body.text,
         key: req.body.key
     });
-    res.send(`${config.protocol}://code.${config.domain}/${id}`)
+
+    const response = {
+        url: `${config.protocol}://code.${config.domain}/${id}`
+    };
+
+    res.send(JSON.stringify(response));
 }

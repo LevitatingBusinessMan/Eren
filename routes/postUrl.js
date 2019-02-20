@@ -18,14 +18,17 @@ module.exports = enmap => (req, res) => {
         return res.status(400).send("Invalid url!");
 
     let id = newID();
-
     let pass = req.body.pass;
-
     enmap.set(id,{
         type: "url",
         url: req.body.url,
         pass,
         key: req.body.key
     });
-    res.send(`${config.protocol}://url.${config.domain}/${id}`)
+
+    const response = {
+        url: `${config.protocol}://url.${config.domain}/${id}`
+    }
+
+    res.send(JSON.stringify(response));
 }
