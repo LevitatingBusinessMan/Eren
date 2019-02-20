@@ -1,6 +1,6 @@
-const path = require('path');
-const config = require("../config/config");
-const newID = require("../idCreator")
+const path = require("path");
+const config = require(path.join(__dirname, "../../config/config"));
+const newID = require(path.join(__dirname, "../util/idCreator"));
 
 module.exports = (req,res) => {
 

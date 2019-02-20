@@ -3,7 +3,7 @@ const path = require("path");
 const express = require("express");
 const Enmap  =  require("enmap");
 const fileUpload = require("express-fileupload");
-const config = require(path.join(__dirname, "config/config.js"));
+const config = require(path.join(__dirname, "../config/config"));
 
 const app = express();
 app.use(fileUpload());
@@ -20,7 +20,7 @@ if (!fs.existsSync(path.join(__dirname,'images')))
 
 const enmap = new Enmap({
     name: "data",
-    dataDir: path.join(__dirname,'data'),
+    dataDir: path.join(__dirname,'../data'),
     fetchAll: false
 });
 
