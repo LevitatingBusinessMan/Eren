@@ -21,7 +21,7 @@ module.exports = (req,res) => {
     if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png" && file.mimetype !== "image/gif")
         return res.status(400).send("Invalid image type!");
     let filename = `${newID()}.${file.mimetype.substr("image/".length)}`;
-    file.mv(path.join(__dirname, '../images', filename));
+    file.mv(path.join(__dirname, '../../images', filename));
 
     let response = {
         url: `${config.protocol}://image.${config.domain}/${filename}`
