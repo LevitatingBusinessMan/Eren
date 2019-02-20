@@ -2,7 +2,7 @@ const path = require("path");
 const config = require(path.join(__dirname, "../../../config/config"));
 const newID = require(path.join(__dirname, "../../util/idCreator"));
 
-module.exports = enmap => (req) => {
+module.exports = enmap => (req, res) => {
     if (!req.files)
         return res.status(400).send("No image!");
 
