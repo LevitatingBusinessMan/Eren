@@ -1,3 +1,5 @@
+const path = require("path");
 module.exports = (req,res) => {
-    res.render('index',{message: "Image not found"})
+    let i = Math.floor(Math.random() * 3)+1;
+    res.sendFile(path.join(__dirname, `../../default_images/image_not_found${i}.png`))
 }
