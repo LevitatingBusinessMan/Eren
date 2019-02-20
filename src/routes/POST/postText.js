@@ -4,13 +4,6 @@ const newID = require(path.join(__dirname, "../../util/idCreator"));
 
 module.exports = enmap => (req, res) => {
 
-    if (!req.body)
-        return res.status(400).send("Missing key!");
-    if (!req.body.key)
-        return res.status(400).send("Missing key!");
-    if (!config.keys.includes(req.body.key))
-        return res.status(401).send("Invalid key!");
-
     if (!req.body.text)
         return res.send("No text!");
     if (req.body.text.length > 10000)

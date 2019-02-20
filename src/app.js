@@ -1,12 +1,19 @@
-const fs = require("fs");
-const path = require("path");
-const express = require("express");
-const Enmap  =  require("enmap");
-const fileUpload = require("express-fileupload");
-const config = require(path.join(__dirname, "../config/config"));
+const fs = require("fs"),
+    path = require("path"),
+    express = require("express"),
+    Enmap  =  require("enmap"),
+    fileUpload = require("express-fileupload"),
+    log = require(path.join(__dirname, "util/logger"))
+    config = require(path.join(__dirname, "../config/config"));
 
 const app = express();
 app.use(fileUpload());
+
+app.use((req, res, next) => {
+    log(req);
+    next();
+});
+
 app.use(express.static(path.join(__dirname, '../images')));
 
 function forceSSL(req, res, next) {
@@ -58,6 +65,9 @@ let serviceNotEnabled = (req, res) => res.status("400").send("This service is no
 const delete_ = require(path.join(__dirname, 'routes/GET/delete.js'))(enmap)
 app.get("/delete/:id/:del_key", delete_);
 
+//Keycheck middleware
+app.post("*", keyCheck);
+
 //POST
 const postImage = require(path.join(__dirname, 'routes/POST/postImage.js'))(enmap)
 app.post("/s/image", config.services.image ? postImage : serviceNotEnabled);
@@ -69,3 +79,17 @@ const postUrl = require(path.join(__dirname, 'routes/POST/postUrl.js'))(enmap)
 app.post("/s/url", config.services.url ? postUrl : serviceNotEnabled);
 
 app.listen(config.port);
+
+function keyCheck(req, res, next) {
+
+    if (!req.body)
+        return res.status(400).send("Missing key!");
+    
+    if (!req.body.key)
+        return res.status(400).send("Missing key!");
+    
+    if (!config.keys.includes(req.body.key))
+        return res.status(401).send("Invalid key!");
+
+    next()
+}

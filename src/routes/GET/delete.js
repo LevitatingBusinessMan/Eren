@@ -1,4 +1,5 @@
 const fs = require("fs");
+const {red} = require("chalk");
 
 module.exports = enmap => (req, res) => {
     const id = req.params.id;
@@ -20,11 +21,13 @@ module.exports = enmap => (req, res) => {
 
         enmap.delete(id);
         res.status("200").send(`Deleted ${id} succesfully`);
+        console.log(`ACT: ${red("[DELETE]")}[${obj.type}] ${id}`);
     }
 
     //ID is of text or a url
     else {
         enmap.delete(id);
         res.status("200").send(`Deleted ${id} succesfully`);
+        console.log(`ACT: ${red("[DELETE]")}[${obj.type}] ${id}`);
     }
 }
