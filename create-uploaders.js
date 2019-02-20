@@ -5,7 +5,7 @@ const chalk = require("chalk");
 const image = {
     Name: "Eren image upload",
     DestinationType: "ImageUploader",
-    RequestURL: `${cf.protocol}://${cf.domain}/s/image`,
+    RequestURL: `${cf.ssl ? "https" : "http"}://${cf.domain}/s/image`,
     FileFormName: "image",
     Arguments: {
       key: "access-key-here"
@@ -17,7 +17,7 @@ const image = {
 const text = {
     Name: "Eren text upload",
     DestinationType: "URLShortener",
-    RequestURL: `${cf.protocol}://${cf.domain}/s/text`,
+    RequestURL: `${cf.ssl ? "https" : "http"}://${cf.domain}/s/text`,
     Arguments: {
         text: "$inpu$",
         key: "access-key-here"
@@ -29,7 +29,7 @@ const text = {
 const url = {
     Name: "Eren url shorten",
     DestinationType: "URLShortener",
-    RequestURL: `${cf.protocol}://${cf.domain}/s/url`,
+    RequestURL: `${cf.ssl ? "https" : "http"}://${cf.domain}/s/url`,
     Arguments: {
         url: "$inpu$",
         key: "access-key-here"
