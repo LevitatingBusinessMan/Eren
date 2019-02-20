@@ -24,7 +24,7 @@ module.exports = enmap => (req, res) => {
     });
 
     const response = {
-        url: `${config.protocol}://code.${config.domain}/${id}`
+        url: `${config.protocol}://${config.prefix.text}.${config.domain}/${id}`
     };
 
     res.send(JSON.stringify(response));

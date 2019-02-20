@@ -24,7 +24,7 @@ module.exports = (req,res) => {
     file.mv(path.join(__dirname, '../../images', filename));
 
     let response = {
-        url: `${config.protocol}://image.${config.domain}/${filename}`
+        url: `${config.protocol}://${config.prefix.image}.${config.domain}/${filename}`
     }
 
     res.send(JSON.stringify(response));
