@@ -1,8 +1,8 @@
 module.exports = {
     "domain": "example.com",
-    "protocol": "http",
+    "ssl": true,
     "keys": ["pass"],
-    "port": 443,
+    "port": 8080,
     "services": {
         "image": true,
         "text": true,

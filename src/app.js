@@ -8,6 +8,16 @@ const config = require(path.join(__dirname, "../config/config"));
 const app = express();
 app.use(fileUpload());
 app.use(express.static(path.join(__dirname, '../images')));
+
+function forceSSL(req, res, next) {
+    if(!req.secure)
+        res.redirect("https://" + req.get("host") + req.url)
+    else next();
+}
+
+if (config.ssl)
+    app.use(forceSSL);
+
 app.set("views", path.join(__dirname, 'views'));
 app.set('view engine', 'pug')
 

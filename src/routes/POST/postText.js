@@ -26,8 +26,8 @@ module.exports = enmap => (req, res) => {
     });
 
     const response = {
-        url: `${config.protocol}://${config.prefix.text}.${config.domain}/${id}`,
-        delete: `${config.protocol}://${config.domain}/delete/${id}/${del_key}`
+        url: `${config.ssl ? "https" : "http"}://${config.prefix.text}.${config.domain}/${id}`,
+        delete: `${config.ssl ? "https" : "http"}://${config.domain}/delete/${id}/${del_key}`
     };
 
     res.send(JSON.stringify(response));
