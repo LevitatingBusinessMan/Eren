@@ -35,6 +35,9 @@ app.get("/", (req,res) => {
 if (!fs.existsSync(path.join(__dirname,'../images')))
     fs.mkdirSync(path.join(__dirname,'../images'))
 
+if (!fs.existsSync(path.join(__dirname,'../data')))
+    fs.mkdirSync(path.join(__dirname,'../data'))
+
 const enmap = new Enmap({
     name: "data",
     dataDir: path.join(__dirname,'../data'),
