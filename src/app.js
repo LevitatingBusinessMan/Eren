@@ -18,11 +18,14 @@ app.use(express.static(path.join(__dirname, '../images')));
 
 function forceSSL(req, res, next) {
     if(!req.secure)
-        res.redirect("https://" + req.get("host") + req.url)
+    {
+        console.log(req.protocol)
+        res.redirect("https://" + req.get("host") + req.url)    
+    }
     else next();
 }
 
-if (config.ssl)
+if (config.force_ssl)
     app.use(forceSSL);
 
 app.set("views", path.join(__dirname, 'views'));

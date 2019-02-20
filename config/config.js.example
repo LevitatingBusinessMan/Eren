@@ -1,6 +1,7 @@
 module.exports = {
     "domain": "example.com",
     "ssl": true,
+    "force_ssl": false,
     "keys": ["pass"],
     "port": 8080,
     "services": {
