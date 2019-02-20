@@ -3,14 +3,14 @@ const fs = require("fs"),
     express = require("express"),
     Enmap  =  require("enmap"),
     fileUpload = require("express-fileupload"),
-    log = require(path.join(__dirname, "util/logger"))
+    {REQ, RES} = require(path.join(__dirname, "util/logger"))
     config = require(path.join(__dirname, "../config/config"));
 
 const app = express();
 app.use(fileUpload());
 
 app.use((req, res, next) => {
-    log(req);
+    REQ(req);
     next();
 });
 
@@ -68,28 +68,41 @@ app.get("/delete/:id/:del_key", delete_);
 //Keycheck middleware
 app.post("*", keyCheck);
 
+/**
+ * By using this function we can log all responses and/or format them
+ * @param {Function} fn Function which returns the reponse info
+ */
+function send(fn) {
+    return (req, res) => {
+        const rsp = fn(req);
+        RES(rsp);
+        res.status(rsp.code).send(rsp.msg);
+    }
+}
+
+
 //POST
 const postImage = require(path.join(__dirname, 'routes/POST/postImage.js'))(enmap)
-app.post("/s/image", config.services.image ? postImage : serviceNotEnabled);
+app.post("/s/image", config.services.image ? send(postImage) : serviceNotEnabled);
 
 const postText = require(path.join(__dirname, 'routes/POST/postText.js'))(enmap)
-app.post("/s/text", config.services.text ? postText : serviceNotEnabled);
+app.post("/s/text", config.services.text ? send(postText) : serviceNotEnabled);
 
 const postUrl = require(path.join(__dirname, 'routes/POST/postUrl.js'))(enmap)
-app.post("/s/url", config.services.url ? postUrl : serviceNotEnabled);
+app.post("/s/url", config.services.url ? send(postUrl) : serviceNotEnabled);
 
 app.listen(config.port);
 
 function keyCheck(req, res, next) {
 
     if (!req.body)
-        return res.status(400).send("Missing key!");
+        return send(() => {return {code: 400, msg: "Missing key!"}})(req, res)
     
     if (!req.body.key)
-        return res.status(400).send("Missing key!");
+        return send(() => {return {code: 400, msg: "Missing key!"}})(req, res)
     
     if (!config.keys.includes(req.body.key))
-        return res.status(401).send("Invalid key!");
+        return send(() => {return {code: 401, msg: "Invalid key!"}})(req, res)
 
     next()
 }

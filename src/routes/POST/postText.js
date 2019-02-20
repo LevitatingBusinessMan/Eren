@@ -1,13 +1,14 @@
 const path = require("path");
 const config = require(path.join(__dirname, "../../../config/config"));
 const newID = require(path.join(__dirname, "../../util/idCreator"));
+const {blue} = require("chalk");
 
-module.exports = enmap => (req, res) => {
+module.exports = enmap => (req) => {
 
     if (!req.body.text)
-        return res.send("No text!");
+        return {code: 400, msg:"No text!"}
     if (req.body.text.length > 10000)
-        return res.status(400).send("Text over 1000 characters");
+        return {code: 400, msg:"Text over 10000 characters!"}
 
     let id = newID();
     const del_key = newID();
@@ -23,5 +24,6 @@ module.exports = enmap => (req, res) => {
         delete: `${config.ssl ? "https" : "http"}://${config.domain}/delete/${id}/${del_key}`
     };
 
-    res.send(JSON.stringify(response));
+    console.log(`ACT: ${blue("[TEXT]")} ${id}`);
+    return {code: 200, msg: JSON.stringify(response)}
 }

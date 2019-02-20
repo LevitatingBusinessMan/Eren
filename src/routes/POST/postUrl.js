@@ -1,15 +1,16 @@
 const path = require("path");
 const config = require(path.join(__dirname, "../../../config/config"));
 const newID = require(path.join(__dirname, "../../util/idCreator"));
+const {blue} = require("chalk");
 
 module.exports = enmap => (req, res) => {
 
     if (!req.body.url)
-        return res.status(400).send("No url supplied!");
+        return {code: 400, msg:"No url supplied!"}
 
     //https://regexr.com/3tfih
     if (!/(((http)|(https)):\/\/)?(\w+:)?([a-z0-9@]+\.)+[a-z0-9]+(:\d+)?((\/[\w()?=&#-%-\S]+)+)?/.test(req.body.url))
-        return res.status(400).send("Invalid url!");
+        return {code: 400, msg:"Invalid url!"}
 
     let id = newID();
     del_key = newID();
@@ -25,5 +26,6 @@ module.exports = enmap => (req, res) => {
         delete: `${config.ssl ? "https" : "http"}://${config.domain}/delete/${id}/${del_key}`
     }
 
-    res.send(JSON.stringify(response));
+    console.log(`ACT: ${blue("[URL]")} ${req.body.url} ${blue("=>")} ${response.url}`);
+    return {code: 200, msg: JSON.stringify(response)}
 }

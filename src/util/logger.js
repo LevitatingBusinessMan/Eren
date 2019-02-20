@@ -1,9 +1,8 @@
-const {greenBright, yellowBright, grey} = require("chalk");
+const {greenBright, yellowBright, red} = require("chalk");
 const dayjs = require("dayjs");
 
 REQ = (req) => {
     let method = `[${req.method}]`;
-    let url = `[ ${req.url} ]`;
 
     if (req.method === "GET")
         method = greenBright(method);
@@ -11,11 +10,24 @@ REQ = (req) => {
     if (req.method === "POST")
         method = yellowBright(method);
 
-    console.log("REQ: " + method + url)
+    console.log(`REQ: ${method} ${req.url}`)
 }
 
-RES = res => {
+RES = rsp => {
+    let code = `[${rsp.code}]`;
 
+    if (rsp.code == 200)
+        code = greenBright(code);
+
+    if (rsp.code == 400)
+        code = yellowBright(code);
+    
+    if (rsp.code == 401)
+        code = red(code);
+
+    console.log(`RES: ${code} ${rsp.msg}`)
 }
 
-module.exports = REQ;
+//ACT IS DONE MANUALLY
+
+module.exports = {REQ,RES};

@@ -28,6 +28,6 @@ module.exports = enmap => (req, res) => {
     else {
         enmap.delete(id);
         res.status("200").send(`Deleted ${id} succesfully`);
-        console.log(`ACT: ${red("[DELETE]")}[${obj.type}] ${id}`);
+        console.log(`ACT: ${red("[DELETE]")} [${obj.type}] ${id}`);
     }
 }

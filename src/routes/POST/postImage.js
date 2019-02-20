@@ -1,17 +1,18 @@
 const path = require("path");
 const config = require(path.join(__dirname, "../../../config/config"));
 const newID = require(path.join(__dirname, "../../util/idCreator"));
+const {blue} = require("chalk");
 
-module.exports = enmap => (req, res) => {
+module.exports = enmap => (req) => {
     if (!req.files)
-        return res.status(400).send("No image!");
+        return {code: 400, msg:"No image!"}
 
     if (!req.files.image)
-        return res.status(400).send("No image!");
+        return {code: 400, msg:"No image!"}
     
     const file = req.files.image;
     if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png" && file.mimetype !== "image/gif")
-        return res.status(400).send("Invalid image type!");
+        return {code: 400, msg:"Invalid file type!"}
 
     const id = newID();
     const filename = `${id}.${file.mimetype.substr("image/".length)}`;
@@ -32,5 +33,6 @@ module.exports = enmap => (req, res) => {
         delete: `${config.ssl ? "https" : "http"}://${config.domain}/delete/${id}/${del_key}`
     }
 
-    res.send(JSON.stringify(response));
+    console.log(`ACT: ${blue("[IMAGE]")} ${id}`);
+    return {code: 200, msg: JSON.stringify(response)}
 }
