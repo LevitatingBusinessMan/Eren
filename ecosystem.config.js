@@ -1,6 +1,6 @@
 module.exports = {
     apps : [{
-        name      : "shareX",
+        name      : "Eren",
         script    : "./src/app.js",
         log       : "./pm2/pm2.log"
     }]
