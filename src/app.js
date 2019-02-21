@@ -48,21 +48,40 @@ const enmap = new Enmap({
 });
 
 //GET
-const getText = require(path.join(__dirname, 'routes/GET/getText.js'))(enmap); //uses db
-const getUrl = require(path.join(__dirname, 'routes/GET/getUrl.js'))(enmap); //uses db
-const getImage = require(path.join(__dirname, 'routes/GET/getImage.js'));
+const replacement_image = require(path.join(__dirname, 'routes/GET/replacement_image.js'));
 
 app.get("/:id", (req,res) => {
 
-    if (req.subdomains.includes(config.prefix.text) && config.services.text) 
-        getText( req, res );
+    const id = req.params.id;
 
-    else if (req.subdomains.includes(config.prefix.url) && config.services.url) 
-        getUrl( req, res );
+    if (req.subdomains.length) {
+        //ID is a filename (has extension) thus a failed image request
+        if (id.includes("."))
+            return replacement_image( req, res );
+        
+        let obj = enmap.get(req.params.id);
+        if (!obj) {
+            RES({code: 404, msg:"ID not found"});
+            return res.render("index", {message: "ID not found"});
+        }
+        else if (!obj.url && !obj.text) {
+            RES({code: 404, msg:"ID not found"});
+            return res.render("index", {message: "ID not found"});
+        }
+        
+        if (obj.type === "text")
+            res.render("text",{text: obj.text});
 
-    else if (req.subdomains.includes(config.prefix.image) && config.services.image) 
-        getImage( req, res );
-    
+        if (obj.type === "url")
+            res.redirect(obj.url.includes("://") ? obj.url : `http://${obj.url}`);
+        
+        //somehow a request that has an image ID but no file extension...
+        if (obj.type === "image") {
+            RES({code: 400, msg:"incomplete image request"});
+            res.status(400).send("Incomplete image request");
+        }
+
+    }
     else res.render('index', {message: "Page not found"});
 });
 
@@ -101,14 +120,20 @@ app.listen(config.port);
 
 function keyCheck(req, res, next) {
 
-    if (!req.body)
-        return send(() => {return {code: 400, msg: "Missing key!"}})(req, res)
+    if (!req.body) {
+        RES({code: 400, msg: "Missing key!"})
+        return res.status(400).send("Missing key!")
+    }
     
-    if (!req.body.key)
-        return send(() => {return {code: 400, msg: "Missing key!"}})(req, res)
-    
-    if (!config.keys.includes(req.body.key))
-        return send(() => {return {code: 401, msg: "Invalid key!"}})(req, res)
+    if (!req.body.key) {
+        RES({code: 400, msg: "Missing key!"})
+        return res.status(400).send("Missing key!")
+    }
+
+    if (!config.keys.includes(req.body.key)) {
+        RES({code: 401, msg: "Invalid key!"})
+        return res.status(401).send("Invalid key!")
+    }
 
     next()
 }

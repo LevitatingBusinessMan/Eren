@@ -19,7 +19,7 @@ RES = rsp => {
     if (rsp.code == 200)
         code = greenBright(code);
 
-    if (rsp.code == 400)
+    if (rsp.code == 400 || rsp.code == 404)
         code = yellowBright(code);
     
     if (rsp.code == 401)
