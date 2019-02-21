@@ -2,6 +2,7 @@ const path = require("path");
 const config = require(path.join(__dirname, "../../../config/config"));
 const newID = require(path.join(__dirname, "../../util/idCreator"));
 const {blue} = require("chalk");
+const keys = require(path.join(__dirname, "../../../keys.json"));
 
 module.exports = enmap => (req, res) => {
 
@@ -21,9 +22,18 @@ module.exports = enmap => (req, res) => {
         del_key
     });
 
+    let domain = config.domain;
+    let prefix = config.prefix.url;
+
+    const key = req.body.key;
+    if (keys[key]) {
+        domain = keys[key].base;
+        prefix = keys[key].image;
+    }
+
     const response = {
-        url: `${config.ssl ? "https" : "http"}://${config.prefix.url}.${config.domain}/${id}`,
-        delete: `${config.ssl ? "https" : "http"}://${config.domain}/delete/${id}/${del_key}`
+        url: `${config.ssl ? "https" : "http"}://${prefix}.${domain}/${id}`,
+        delete: `${config.ssl ? "https" : "http"}://${domain}/delete/${id}/${del_key}`
     }
 
     console.log(`ACT: ${blue("[URL]")} ${req.body.url} ${blue("=>")} ${response.url}`);

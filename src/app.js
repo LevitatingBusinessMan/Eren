@@ -3,7 +3,7 @@ const fs = require("fs"),
     express = require("express"),
     Enmap  =  require("enmap"),
     fileUpload = require("express-fileupload"),
-    {REQ, RES} = require(path.join(__dirname, "util/logger"))
+    {REQ, RES} = require(path.join(__dirname, "util/logger")),
     config = require(path.join(__dirname, "../config/config"));
 
 const app = express();

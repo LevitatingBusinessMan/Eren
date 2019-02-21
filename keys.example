@@ -1,0 +1,8 @@
+{
+    "pass": {
+        "base": "special_domain.com",
+        "image": "special_image",
+        "text": "special_text",
+        "url": "special_url"
+    }
+}

@@ -6,3 +6,4 @@ node_modules
 build
 pm2
 TODO
+keys.json
