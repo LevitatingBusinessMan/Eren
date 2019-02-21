@@ -1,9 +1,9 @@
 package-lock.json
 config/config.js
+config/keys.json
 data
-images/*
+images
 node_modules
 build
 pm2
 TODO
-keys.json

@@ -3,6 +3,7 @@ module.exports = {
     "ssl": true,
     "force_ssl": false,
     "keys": ["pass"],
+    "key_specifics": require(path.join(__dirname, "./keys.json")),
     "port": 8080,
     "services": {
         "image": true,

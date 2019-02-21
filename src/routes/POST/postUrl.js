@@ -2,7 +2,6 @@ const path = require("path");
 const config = require(path.join(__dirname, "../../../config/config"));
 const newID = require(path.join(__dirname, "../../util/idCreator"));
 const {blue} = require("chalk");
-const keys = require(path.join(__dirname, "../../../keys.json"));
 
 module.exports = enmap => (req, res) => {
 
@@ -26,9 +25,9 @@ module.exports = enmap => (req, res) => {
     let prefix = config.prefix.url;
 
     const key = req.body.key;
-    if (keys[key]) {
-        domain = keys[key].base;
-        prefix = keys[key].image;
+    if (config.key_specifics[key]) {
+        domain = config.key_specifics[key].base;
+        prefix = config.key_specifics[key].image;
     }
 
     const response = {
