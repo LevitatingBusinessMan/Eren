@@ -6,11 +6,11 @@ const {blue} = require("chalk");
 module.exports = enmap => (req, res) => {
 
     if (!req.body.url)
-        return {code: 400, msg:"No url supplied!"}
+        return {code: 400, data: {err: "No url supplied!"}}
 
     //https://regexr.com/3tfih
     if (!/(((http)|(https)):\/\/)?(\w+:)?([a-z0-9@]+\.)+[a-z0-9]+(:\d+)?((\/[\w()?=&#-%-\S]+)+)?/.test(req.body.url))
-        return {code: 400, msg:"Invalid url!"}
+        return {code: 400, data: {err: "Invalid url!"}}
 
     let id = newID();
     del_key = newID();
@@ -36,5 +36,5 @@ module.exports = enmap => (req, res) => {
     }
 
     console.log(`ACT: ${blue("[URL]")} ${req.body.url} ${blue("=>")} ${response.url}`);
-    return {code: 200, msg: JSON.stringify(response)}
+    return {code: 200, data: response}
 }

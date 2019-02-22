@@ -1,0 +1,48 @@
+/* TOOLTIP */
+/* taken from Kirito_server project */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    white-space: nowrap ;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: 6px;
+
+    position: relative;
+    z-index: 5;
+}
+.tooltip:hover .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+.tooltip .tooltiptext.right::after {
+    top: 50%;
+    left: 100%;
+    margin-top: -5px;
+    border-color: transparent transparent transparent black;
+}
+.tooltip .tooltiptext.left::after {
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-color: transparent black transparent transparent;
+}
+.tooltip .tooltiptext.up::after {
+}
+.tooltip .tooltiptext.down::after {
+    top: 100%;
+    left: 50%;
+    border-color: black transparent transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+/* Make tooltip disappear when hovering over it */
+.tooltip:hover .tooltiptext:hover {
+    visibility: hidden;
+}

@@ -3,14 +3,18 @@ const dayjs = require("dayjs");
 
 REQ = (req) => {
     let method = `[${req.method}]`;
-
+    
     if (req.method === "GET")
         method = greenBright(method);
     
     if (req.method === "POST")
         method = yellowBright(method);
 
-    console.log(`REQ: ${method} ${req.url}`)
+    if (req.subdomains.length)
+        console.log(`REQ: ${method} [${req.subdomains[0]}] ${req.url}`);
+    else 
+        console.log(`REQ: ${method} ${req.url}`);
+
 }
 
 RES = rsp => {

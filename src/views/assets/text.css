@@ -1,0 +1,121 @@
+body {
+    height:100%;
+    margin:0px;
+}
+
+#output, #input {
+    font-size: 15px;
+    font-family: monospace;
+    position: absolute;
+    width: calc(100% - 31px - 1em);
+    height: calc(100% - 0px - 1em);
+    margin-left: 31px;
+    border: none;
+}
+
+#input {
+    z-index: 1;
+    outline: none;
+    color: white; /* caret */
+    background: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+#linenumber-containter {
+    text-align: center;
+    padding: 0.5em 0;
+    z-index: 2;
+    float: left;
+    width: 30px;
+    height: calc(100% - 1em);
+    border-right: 1px solid black;
+
+    
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+#menu {
+    z-index: 2;
+    text-align: center;
+    font-family: montserrat;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 200px;
+    height: 500px;
+}
+
+#eren {
+    text-decoration: none;
+    color: white;
+    font-size: 2em;
+    margin: 21px 0px;
+    font-weight: bold;
+
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.btn svg {
+    margin: 0;
+}
+
+.btn {
+    margin: 5px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.btn .tooltiptext {
+    position: relative;
+    right: 65px;
+    bottom: 27px;
+    cursor: default;
+}
+
+.save-btn-path {
+    fill: green;
+}
+
+.back-btn-path {
+    fill: red;
+}
+
+.hljs {
+    background-color: #17181c;
+    color: white;
+}
+
+.hljs-title {
+    color: #ff6666;
+}
+
+.hljs-string {
+    color: #ffff00;
+}
+
+.hljs-built_in {
+    color: #66ff66;
+}
+
+.hljs-literal {
+    color: #4d4dff;
+}
+
+.hljs-keyword {
+    color: #00ffff;
+}
+
+.hljs-number {
+    color: #00ff00;
+}
+
+.hljs-comment {
+    color: rgb(185, 180, 172);
+}

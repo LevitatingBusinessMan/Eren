@@ -1,9 +1,257 @@
 html
     head
         link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css")
-        script(src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js")
-        style body{height:100%;margin:0px;} code{height:100%;}
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js")
+        style
+            include assets/tooltip.css
+            include assets/text.css
     body
+
+        //Instead of a contenteditable div in a pre, I use a textarea now to be able to use selectionStart & selectionEnd
+        textarea#input(class="hljs" type="text" spellcheck="false")= (text || "//Hello world!")
+
+        div#linenumber-containter(class="hljs")
+
         pre
-            code=text
-        script hljs.initHighlightingOnLoad();
+            code#output(class="hljs")
+
+        div#menu
+            a#eren(onclick="home()" href="#" style="cursor:pointer; display:block;") Eren
+            div(class="btn tooltip" onclick="save()" style="display:inline-block")
+                include assets/save.pug
+                span(class="tooltiptext right") save
+            div(class="btn tooltip" onclick="back()" style="display:inline-block")
+                include assets/back.pug
+                span(class="tooltiptext right") back
+
+        script.
+
+            /*
+                HLJS isn't made for editors but there are 2 ways to get it working.
+                The first is seen (badly) implemented here: https://codepen.io/shotastage/pen/KaKwya;
+                An editable div (preferably in a pre block) (lets call him input) is hidden behind the HLJS code (we'll call this output).
+                Input has the hljs class just like output, so the styling is the same and the only differents is the syntax highlighting.
+                When the user clicks on output, we use increase the z-index of input so it's on top of output,
+                and we use input.focus() to put focus on that div. After that we decrease the z-index again to make output visible.
+                Now the hidden div is still in focuss and can be typed in, but is hidden behind the output div.
+                We can listen for input from the underlaying still focussed div, and when we receive input we copy the hidden input divs
+                innerHTML to output. Then we call HLJS to rehighlight it. This way we can type in the hidden box but the keystrokes show up
+                in an HLJS div with syntax highlighting. This works, but we can't select where to type, and we can't select things
+                and caret is visible.
+
+                The second method is used here (after replacing the first).
+                We still have an output and an input div (or textarea if you want to know the caret location in chrome).
+                The input div doesn't lay under but actually on top of the output div. Inputs color and background are both transparent,
+                this way we can still type in the div, but we can not see it. 
+                Input still has the hljs class so the font family and size are the same,
+                this way we can still accurately select text while only looking at the output div. With this method,
+                the user can still select text, and replace the cursor with the mouse.
+                
+                To get the caret to show in the second method, you could make the color black (which targets text and caret) and use
+                -webkit-text-fill-color to specificly make the text transparent.
+            */
+            
+           const input = document.getElementById("input");
+           const code = document.getElementById("output");
+            
+            
+            const ln_cnr = document.getElementById("linenumber-containter");
+            ln_cnr.style.fontSize = code.style.fontSize;
+
+            update();
+
+            input.addEventListener("input", e => {
+                update();
+                if (!window.location.href.includes("#"))
+                    location.replace(window.location.href + "#edited");
+            });
+
+            function update() {
+                code.innerHTML = hljs.highlightAuto(input.value).value;
+
+                const lines = input.value.split(/\n/).length;
+
+                ln_cnr.innerHTML = "";
+                for (let i = 1; i < lines+1; i++)
+                    ln_cnr.innerHTML += i + "<br/>";
+            }
+
+            function home() {
+                let hostname = window.location.hostname;
+                if (hostname.split(".").length > 2) {
+                    let hostname_array = hostname.split(".");
+                    hostname_array.shift();
+                    hostname = hostname_array.join(".");
+                }
+                location.href = "http://" + hostname;
+            }
+
+            function save() {
+
+                const text = input.value;
+
+                const key = prompt("Key:");
+
+                fetch("/s/text", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        text,
+                        key
+                    })
+                }).then(response => {
+                    if (response.status !== 200)
+                        alert(response.statusText);
+                    else
+                        return response.json();
+                }).then(response => {
+                    window.location.href = response.url;
+                })
+            }
+
+            function back() {
+                location.replace(window.location.href.split("#")[0]);
+            }
+            
+            //The horror that is my own indentation system
+            //This is the first time ever that I am writing code that I think I won't understand when I read it back in 2 years
+            //If you're entering, be careful
+            input.addEventListener("keydown", e => {
+               if(e.code == "Tab") { //Tab or Shift+Tab
+                   
+                   //IE support here
+                   function nope_not_doing_it() {
+
+                   }
+
+                   //MOZILLA and others
+                   if (input.selectionStart || input.selectionStart == '0') {
+                       let startPos = input.selectionStart;
+                       let endPos = input.selectionEnd;
+
+                       let singplePos = startPos == endPos;
+
+                        //TAB
+                        if (!e.shiftKey) {
+                            if (singplePos) {
+                                input.value = input.value.substring(0, startPos) + " ".repeat(4) + input.value.substring(startPos, input.value.length);
+                                input.selectionStart = input.selectionEnd = startPos + 4;
+                            }
+                            else indent_multiple();
+                        }
+                        
+                        //SHIFT+TAB
+                        else {
+                            if (singplePos) {
+                                let prev_4 = input.value.substring(startPos-4, startPos);
+
+                                let remove = 0;
+                                let stop = false;
+                                for (let i=3; !stop && i > -1; i--) {
+                                    if (prev_4[i] == " ")
+                                        remove++;
+                                    else stop = true;
+                                }
+                                
+                                input.value = input.value.substring(0, startPos-remove) + input.value.substring(startPos, input.value.length)
+                                input.selectionStart = input.selectionEnd = startPos - remove;
+
+                            } else indent_multiple(true);
+                        }
+
+                        function indent_multiple(shiftTab) {
+                                
+                            let all_br = [0];
+                                for (let i=0; i < input.value.length; i++)
+                                    if (input.value[i].match(/\n/)) all_br.push(i+1)
+                                        all_br.push(input.value.length)
+
+                            let add_tab_locations = [];
+                            let first_found = false;
+                            for (let i=0; i < all_br.length; i++) {
+                                const loc = all_br[i];
+
+                                //the br before the selection
+                                if (all_br[i+1] > startPos && all_br[i+1] < endPos && !first_found) {
+                                    add_tab_locations.push(loc);
+                                    first_found = true;
+                                }
+                                
+                                //All br's between the selection
+                                if (loc > startPos && loc < endPos)
+                                    add_tab_locations.push(loc);
+                            }
+
+
+                            if (!shiftTab) {
+
+                                if (add_tab_locations.length > 1) {
+                                    var str = input.value.substring(0, add_tab_locations[0]) + " ".repeat(4);
+
+                                    for (let i=1; i < add_tab_locations.length; i++) {
+                                        str += input.value.substring(add_tab_locations[i-1], add_tab_locations[i]) + " ".repeat(4);
+                                    }
+
+                                    str += input.value.substring(add_tab_locations[add_tab_locations.length-1], input.value.length)
+                                }
+                                else {
+                                    //Mimicing vscodes behavior 
+                                    var str = input.value.substring(0, startPos) + " ".repeat(4) + input.value.substring(endPos, input.value.length)
+                                }
+
+                            } else {
+                                //So we can use splice
+                                let str_array = input.value.split("")
+
+                                let next_4 = input.value.substring(add_tab_locations[0]+4, add_tab_locations[0]);
+
+                                let remove = 0;
+                                let stop = false;
+                                for (let i=0; !stop && i < 4; i++) {
+                                    if (next_4[i] == " ")
+                                        remove++;
+                                    else stop = true;
+                                }
+
+                                var str = input.value.substring(0, add_tab_locations[0]) + input.value.substring(add_tab_locations[0] + remove, add_tab_locations[1]);
+
+                                for (let i=1; i < add_tab_locations.length; i++) {
+                                    next_4 = input.value.substring(add_tab_locations[i], add_tab_locations[i] + 4);
+
+                                    remove = 0;
+                                    stop = false;
+                                        for (let i=0; !stop && i < 4; i++) {
+                                            if (next_4[i] == " ")
+                                                remove++;
+                                            else stop = true;
+                                        }
+
+                                        //last location
+                                        if (i+1 == add_tab_locations.length) {
+                                            str += input.value.substring(add_tab_locations[i] + remove, input.value.length);
+                                        }
+                                        else {
+                                            str += input.value.substring(add_tab_locations[i] + remove, add_tab_locations[i+1]);
+                                        } 
+                                }
+                            }
+                            input.value = str;
+                            input.selectionStart = startPos + shiftTab ? 4 : -4;
+                            input.selectionEnd = endPos + shiftTab ? 4 : -4;
+                            }
+
+                    }
+
+                    update();
+
+                    //Prevent TAB switching to the next element in Mozilla and others
+                    if(e.preventDefault) {
+                        e.preventDefault();
+                    }
+
+                    return false; //In IE this should disable TAB switching to the next element
+                }
+            });
+

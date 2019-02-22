@@ -4,17 +4,19 @@ const fs = require("fs"),
     Enmap  =  require("enmap"),
     fileUpload = require("express-fileupload"),
     {REQ, RES} = require(path.join(__dirname, "util/logger")),
+    bodyParser = require('body-parser');
     config = require(path.join(__dirname, "../config/config"));
 
 const app = express();
 app.use(fileUpload());
+app.use(bodyParser.json());
 
 app.use((req, res, next) => {
     REQ(req);
     next();
 });
 
-app.use(express.static(path.join(__dirname, '../images')));
+app.use(express.static(path.join(__dirname, '../images'))); //For serving images
 
 function forceSSL(req, res, next) {
     if(!req.secure)
@@ -31,10 +33,6 @@ if (config.force_ssl)
 app.set("views", path.join(__dirname, 'views'));
 app.set('view engine', 'pug')
 
-app.get("/", (req,res) => {
-    res.render('index');
-});
-
 if (!fs.existsSync(path.join(__dirname,'../images')))
     fs.mkdirSync(path.join(__dirname,'../images'))
 
@@ -48,6 +46,21 @@ const enmap = new Enmap({
 });
 
 //GET
+app.get("/", (req,res) => {
+    if (req.subdomains.length) {
+        if (req.subdomains.includes(config.prefix.image) && config.services.image) {
+            res.render("index");
+        }
+        if (req.subdomains.includes(config.prefix.text) && config.services.text) {
+            res.render("text");
+        }
+        if (req.subdomains.includes(config.prefix.url) && config.services.url) {
+            res.render("shorten");
+        }
+    }
+    else res.render('index');
+});
+
 const replacement_image = require(path.join(__dirname, 'routes/GET/replacement_image.js'));
 
 app.get("/:id", (req,res) => {
@@ -101,7 +114,8 @@ function send(fn) {
     return (req, res) => {
         const rsp = fn(req);
         RES(rsp);
-        res.status(rsp.code).send(rsp.msg);
+        
+        res.status(rsp.code).send(JSON.stringify(rsp.data));
     }
 }
 
@@ -121,19 +135,19 @@ app.listen(config.port);
 function keyCheck(req, res, next) {
 
     if (!req.body) {
-        RES({code: 400, msg: "Missing key!"})
-        return res.status(400).send("Missing key!")
+        RES({code: 400, msg: "Missing key!"});
+        return res.status(400).send(JSON.stringify({err:"Missing key!"}));
     }
     
     if (!req.body.key) {
-        RES({code: 400, msg: "Missing key!"})
-        return res.status(400).send("Missing key!")
+        RES({code: 400, msg: "Missing key!"});
+        return res.status(400).send(JSON.stringify({err:"Missing key!"}))
     }
 
     if (!config.keys.includes(req.body.key)) {
-        RES({code: 401, msg: "Invalid key!"})
-        return res.status(401).send("Invalid key!")
+        RES({code: 401, msg: "Invalid key!"});
+        return res.status(401).send(JSON.stringify({err:"Invalid key!"}));
     }
 
-    next()
+    next();
 }
