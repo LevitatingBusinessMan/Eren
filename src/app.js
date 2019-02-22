@@ -49,7 +49,7 @@ const enmap = new Enmap({
 app.get("/", (req,res) => {
     if (req.subdomains.length) {
         if (req.subdomains.includes(config.prefix.image) && config.services.image) {
-            res.render("index");
+            res.render("image");
         }
         if (req.subdomains.includes(config.prefix.text) && config.services.text) {
             res.render("text");
