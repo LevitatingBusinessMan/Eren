@@ -114,7 +114,7 @@ function send(fn) {
     return (req, res) => {
         const rsp = fn(req);
         RES(rsp);
-        
+
         res.status(rsp.code).send(JSON.stringify(rsp.data));
     }
 }
@@ -130,7 +130,7 @@ app.post("/s/text", config.services.text ? send(postText) : serviceNotEnabled);
 const postUrl = require(path.join(__dirname, 'routes/POST/postUrl.js'))(enmap)
 app.post("/s/url", config.services.url ? send(postUrl) : serviceNotEnabled);
 
-app.listen(config.port);
+app.listen(config.port, () => console.log("Listening on port: " +config.port));
 
 function keyCheck(req, res, next) {
 
