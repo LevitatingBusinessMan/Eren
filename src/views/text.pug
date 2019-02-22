@@ -115,6 +115,20 @@ html
                 location.replace(window.location.href.split("#")[0]);
             }
             
+            //CTRL+S
+            input.addEventListener("keydown", e => {
+                console.log(e)
+                if (e.ctrlKey && e.key == "s") {
+                    save();
+                    
+                    if(e.preventDefault) {
+                        e.preventDefault();
+                    }
+                    
+                    return false;
+                }
+            });
+
             //The horror that is my own indentation system
             //This is the first time ever that I am writing code that I think I won't understand when I read it back in 2 years
             //If you're entering, be careful
@@ -243,6 +257,9 @@ html
                     }
 
                     update();
+
+                    if (!window.location.href.includes("#"))
+                        location.replace(window.location.href + "#edited");
 
                     //Prevent TAB switching to the next element in Mozilla and others
                     if(e.preventDefault) {

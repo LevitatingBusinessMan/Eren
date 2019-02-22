@@ -1,5 +1,4 @@
 body {
-    height:100%;
     margin:0px;
 }
 
@@ -8,12 +7,14 @@ body {
     font-family: monospace;
     position: absolute;
     width: calc(100% - 31px - 1em);
-    height: calc(100% - 0px - 1em);
-    margin-left: 31px;
+    height: calc(100% - 1em);
+    left: 31px;
+    top: 0;
     border: none;
 }
 
 #input {
+    resize: none;
     z-index: 1;
     outline: none;
     color: white; /* caret */
@@ -22,10 +23,12 @@ body {
 }
 
 #linenumber-containter {
+    position: absolute;
+    left: 0;
+    top: 0;
     text-align: center;
     padding: 0.5em 0;
     z-index: 2;
-    float: left;
     width: 30px;
     height: calc(100% - 1em);
     border-right: 1px solid black;
