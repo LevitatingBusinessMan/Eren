@@ -75,11 +75,11 @@ app.get("/:id", (req,res) => {
         let obj = enmap.get(req.params.id);
         if (!obj) {
             RES({code: 404, msg:"ID not found"});
-            return res.render("index", {message: "ID not found"});
+            return res.status(404).render("index", {message: "ID not found"});
         }
         else if (!obj.url && !obj.text) {
             RES({code: 404, msg:"ID not found"});
-            return res.render("index", {message: "ID not found"});
+            return res.status(404).render("index", {message: "ID not found"});
         }
         
         if (obj.type === "text")

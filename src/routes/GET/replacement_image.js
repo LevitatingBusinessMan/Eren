@@ -5,5 +5,5 @@ module.exports = (req,res) => {
         return res.sendFile(path.join(__dirname, `../../../default_images/favicon.ico`))
 
     let i = Math.floor(Math.random() * 3)+1;
-    res.sendFile(path.join(__dirname, `../../../default_images/image_not_found${i}.png`))
+    res.status(404).sendFile(path.join(__dirname, `../../../default_images/image_not_found${i}.png`))
 }

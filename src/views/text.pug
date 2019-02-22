@@ -8,7 +8,7 @@ html
     body
 
         //Instead of a contenteditable div in a pre, I use a textarea now to be able to use selectionStart & selectionEnd
-        textarea#input(class="hljs" type="text" spellcheck="false")= (text || "//Hello world!")
+        textarea#input(class="hljs edit" type="text" spellcheck="false")= (text || "//Hello world!")
 
         div#linenumber-containter(class="hljs")
 
@@ -17,10 +17,10 @@ html
 
         div#menu
             a#eren(onclick="home()" href="#" style="cursor:pointer; display:block;") Eren
-            div(class="btn tooltip" onclick="save()" style="display:inline-block")
+            div(class="btn edit tooltip" onclick="save()" style="display:inline-block")
                 include assets/save.pug
                 span(class="tooltiptext right") save
-            div(class="btn tooltip" onclick="back()" style="display:inline-block")
+            div(class="btn edit tooltip" onclick="back()" style="display:inline-block")
                 include assets/back.pug
                 span(class="tooltiptext right") back
 
@@ -53,7 +53,13 @@ html
             
            const input = document.getElementById("input");
            const code = document.getElementById("output");
-            
+
+            //Disable editing for mobile
+            if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+                let elements = document.getElementsByClassName("edit");
+                for (let i=0; i < elements.length; i++)
+                    elements[i].style.display = "none";
+            }
             
             const ln_cnr = document.getElementById("linenumber-containter");
             ln_cnr.style.fontSize = code.style.fontSize;
@@ -117,7 +123,6 @@ html
             
             //CTRL+S
             input.addEventListener("keydown", e => {
-                console.log(e)
                 if (e.ctrlKey && e.key == "s") {
                     save();
                     
@@ -140,18 +145,21 @@ html
 
                    }
 
-                   //MOZILLA and others
-                   if (input.selectionStart || input.selectionStart == '0') {
-                       let startPos = input.selectionStart;
-                       let endPos = input.selectionEnd;
+                    //MOZILLA and others
+                    if (input.selectionStart || input.selectionStart == '0') {
+                        var newStart;
+                        var newEnd;
 
-                       let singplePos = startPos == endPos;
+                        let startPos = input.selectionStart;
+                        let endPos = input.selectionEnd;
+
+                        let singplePos = startPos == endPos;
 
                         //TAB
                         if (!e.shiftKey) {
                             if (singplePos) {
                                 input.value = input.value.substring(0, startPos) + " ".repeat(4) + input.value.substring(startPos, input.value.length);
-                                input.selectionStart = input.selectionEnd = startPos + 4;
+                                newStart = newEnd = startPos + 4;
                             }
                             else indent_multiple();
                         }
@@ -170,7 +178,7 @@ html
                                 }
                                 
                                 input.value = input.value.substring(0, startPos-remove) + input.value.substring(startPos, input.value.length)
-                                input.selectionStart = input.selectionEnd = startPos - remove;
+                                newStart = newEnd = startPos - remove;
 
                             } else indent_multiple(true);
                         }
@@ -198,6 +206,13 @@ html
                                     add_tab_locations.push(loc);
                             }
 
+                            //Sigle line selections
+                            if (!add_tab_locations.length)
+                                for (let i=0; i < all_br.length; i++)  {
+                                    console.log(all_br[i] < startPos && all_br[i+1] > startPos)
+                                    if (all_br[i] < startPos && all_br[i+1] > startPos)
+                                        add_tab_locations.push(all_br[i])
+                                }
 
                             if (!shiftTab) {
 
@@ -213,6 +228,7 @@ html
                                 else {
                                     //Mimicing vscodes behavior 
                                     var str = input.value.substring(0, startPos) + " ".repeat(4) + input.value.substring(endPos, input.value.length)
+                                    newStart = newEnd = startPos + 4;
                                 }
 
                             } else {
@@ -229,7 +245,12 @@ html
                                     else stop = true;
                                 }
 
-                                var str = input.value.substring(0, add_tab_locations[0]) + input.value.substring(add_tab_locations[0] + remove, add_tab_locations[1]);
+                                if(add_tab_locations.length > 1)
+                                    var str = input.value.substring(0, add_tab_locations[0]) + input.value.substring(add_tab_locations[0] + remove, add_tab_locations[1]);
+                                
+                                //Single line
+                                else
+                                    var str = input.value.substring(0, add_tab_locations[0]) + input.value.substring(add_tab_locations[0] + remove, input.value.length);
 
                                 for (let i=1; i < add_tab_locations.length; i++) {
                                     next_4 = input.value.substring(add_tab_locations[i], add_tab_locations[i] + 4);
@@ -252,11 +273,16 @@ html
                                 }
                             }
                             input.value = str;
-                            }
-
+                        }
                     }
 
                     update();
+
+                    if (newStart)
+                        input.selectionStart = newStart;
+                    
+                    if (newEnd)
+                        input.selectionEnd = newEnd;
 
                     if (!window.location.href.includes("#"))
                         location.replace(window.location.href + "#edited");
