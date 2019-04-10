@@ -61,7 +61,7 @@ app.get("/i/:id", getID);
 
 let serviceNotEnabled = (req, res) => res.status("400").send("This service is not enabled");
 
-const delete_ = require(path.join(__dirname, 'routes/GET/delete.js'))(enmap)
+const delete_ = require(path.join(__dirname, 'routes/GET/delete.js'))
 app.get("/delete/:id/:del_key", delete_);
 
 //Keycheck middleware
