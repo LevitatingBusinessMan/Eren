@@ -40,7 +40,7 @@ module.exports  = (req) => {
 
     const response = {
         url: `${config.ssl ? "https" : "http"}://${prefix.length ? `${prefix}.${domain}/${filename}` : `${domain}/i/${filename}`}`,
-        delete: `${config.ssl ? "https" : "http"}://${domain}/delete/${id}/${del_key}`
+        delete: `${config.ssl ? "https" : "http"}://${domain}/delete/${del_key}`
     }
 
     console.log(`ACT: ${blue("[IMAGE]")} ${id}`);

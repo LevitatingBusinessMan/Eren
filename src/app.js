@@ -55,14 +55,16 @@ app.get("/", (req,res) => {
 const replacement_image = require(path.join(__dirname, 'routes/GET/replacement_image.js'));
 const getID = require(path.join(__dirname, 'routes/GET/getID.js'));
 
+const create_token = require(path.join(__dirname, 'routes/GET/create_token.js'))
+app.get("/create_token", create_token);
+
 //Client is trying to retrieve a database entry
 app.get("/:id", getID);
 app.get("/i/:id", getID);
 
-let serviceNotEnabled = (req, res) => res.status("400").send("This service is not enabled");
 
 const delete_ = require(path.join(__dirname, 'routes/GET/delete.js'))
-app.get("/delete/:id/:del_key", delete_);
+app.get("/delete/:del_key", delete_);
 
 //Keycheck middleware
 app.post("*", keyCheck);
@@ -79,6 +81,8 @@ function send(fn) {
     }
 }
 
+
+let serviceNotEnabled = (req, res) => res.status("400").send("This service is not enabled");
 
 //POST
 const postImage = require(path.join(__dirname, 'routes/POST/postImage.js'))

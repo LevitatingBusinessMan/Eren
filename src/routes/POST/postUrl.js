@@ -33,7 +33,7 @@ module.exports = (req, res) => {
 
     const response = {
         url: `${config.ssl ? "https" : "http"}://${prefix.length ? `${prefix}.${domain}/${id}` : `${domain}/i/${id}`}`,
-        delete: `${config.ssl ? "https" : "http"}://${domain}/delete/${id}/${del_key}`
+        delete: `${config.ssl ? "https" : "http"}://${domain}/delete/${del_key}`
     }
 
     console.log(`ACT: ${blue("[URL]")} ${req.body.url} ${blue("=>")} ${response.url}`);
