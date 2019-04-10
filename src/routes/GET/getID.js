@@ -1,13 +1,13 @@
 const path = require("path");
 const {REQ, RES} = require(path.join(__dirname, "../../util/logger"));
 const replacement_image = require(path.join(__dirname, "replacement_image"));
+const r = require(path.join(__dirname, "../../util/db"));
 
-module.exports = enmap => ( req, res ) => {
-
+module.exports = async ( req, res ) => {
     //split id of any file extensions
     const id = req.params.id.split(".")[0];
     if (req.subdomains.length || req.path.match(/(\/i\/[a-z,A-Z]*)(\.[a-z,A-Z]*)?/)) {
-        let obj = enmap.get(id);
+        let obj = await r.table("units").get(id).run();
         if (!obj) {
 
             //When there is a . in the requested ID we assume the client attempted to retrieve an image

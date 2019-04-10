@@ -1,7 +1,6 @@
 const fs = require("fs"),
     path = require("path"),
     express = require("express"),
-    Enmap  =  require("enmap"),
     fileUpload = require("express-fileupload"),
     {REQ, RES} = require(path.join(__dirname, "util/logger")),
     bodyParser = require('body-parser');
@@ -37,12 +36,6 @@ if (!fs.existsSync(path.join(__dirname,'../images')))
 if (!fs.existsSync(path.join(__dirname,'../data')))
     fs.mkdirSync(path.join(__dirname,'../data'))
 
-const enmap = new Enmap({
-    name: "data",
-    dataDir: path.join(__dirname,'../data'),
-    fetchAll: false
-});
-
 //GET
 app.get("/", (req,res) => {
     if (req.subdomains.length) {
@@ -60,7 +53,7 @@ app.get("/", (req,res) => {
 });
 
 const replacement_image = require(path.join(__dirname, 'routes/GET/replacement_image.js'));
-const getID = require(path.join(__dirname, 'routes/GET/getID.js'))(enmap);
+const getID = require(path.join(__dirname, 'routes/GET/getID.js'));
 
 //Client is trying to retrieve a database entry
 app.get("/:id", getID);
@@ -82,23 +75,22 @@ function send(fn) {
     return (req, res) => {
         const rsp = fn(req);
         RES(rsp);
-
         res.status(rsp.code).send(JSON.stringify(rsp.data));
     }
 }
 
 
 //POST
-const postImage = require(path.join(__dirname, 'routes/POST/postImage.js'))(enmap)
+const postImage = require(path.join(__dirname, 'routes/POST/postImage.js'))
 app.post("/s/image", config.services.image ? send(postImage) : serviceNotEnabled);
 
-const postText = require(path.join(__dirname, 'routes/POST/postText.js'))(enmap)
+const postText = require(path.join(__dirname, 'routes/POST/postText.js'))
 app.post("/s/text", config.services.text ? send(postText) : serviceNotEnabled);
 
-const postUrl = require(path.join(__dirname, 'routes/POST/postUrl.js'))(enmap)
+const postUrl = require(path.join(__dirname, 'routes/POST/postUrl.js'))
 app.post("/s/url", config.services.url ? send(postUrl) : serviceNotEnabled);
 
-app.listen(config.port, () => console.log("Listening on port: " +config.port));
+app.listen(config.port, () => console.log("Listening on port: " + config.port));
 
 function keyCheck(req, res, next) {
 

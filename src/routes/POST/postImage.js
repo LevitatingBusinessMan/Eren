@@ -2,8 +2,9 @@ const path = require("path");
 const config = require(path.join(__dirname, "../../../config/config"));
 const newID = require(path.join(__dirname, "../../util/idCreator"));
 const {blue} = require("chalk");
+const r = require(path.join(__dirname, "../../util/db"));
 
-module.exports = enmap => (req) => {
+module.exports  = (req) => {
     if (!req.files)
         return {code: 400, data: {err: "No image!"}}
 
@@ -21,12 +22,12 @@ module.exports = enmap => (req) => {
     file.mv(file_path);
 
     const del_key = newID();
-    enmap.set(id,{
+    r.table("units").insert({id,
         type: "image",
         path: file_path,
         del_key,
         key: req.body.key
-    });
+    }).run();
 
     let domain = config.domain;
     let prefix = config.prefix.image;

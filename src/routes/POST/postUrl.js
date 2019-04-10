@@ -2,8 +2,9 @@ const path = require("path");
 const config = require(path.join(__dirname, "../../../config/config"));
 const newID = require(path.join(__dirname, "../../util/idCreator"));
 const {blue} = require("chalk");
+const r = require(path.join(__dirname, "../../util/db"));
 
-module.exports = enmap => (req, res) => {
+module.exports = (req, res) => {
 
     if (!req.body.url)
         return {code: 400, data: {err: "No url supplied!"}}
@@ -14,12 +15,12 @@ module.exports = enmap => (req, res) => {
 
     let id = newID();
     del_key = newID();
-    enmap.set(id,{
+    r.table("units").insert({id,
         type: "url",
         url: req.body.url,
         key: req.body.key,
         del_key
-    });
+    }).run();
 
     let domain = config.domain;
     let prefix = config.prefix.url;

@@ -4,6 +4,7 @@ module.exports = {
     "force_ssl": false,
     "keys": ["pass"],
     "key_specifics": require(path.join(__dirname, "./keys.json")),
+    "DB": "Eren", // Name of Rethink database
     "port": 8080,
     "services": {
         "image": true,
