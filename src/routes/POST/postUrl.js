@@ -31,7 +31,7 @@ module.exports = enmap => (req, res) => {
     }
 
     const response = {
-        url: `${config.ssl ? "https" : "http"}://${prefix}.${domain}/${id}`,
+        url: `${config.ssl ? "https" : "http"}://${prefix.length ? `${prefix}.${domain}/${id}` : `${domain}/i/${id}`}`,
         delete: `${config.ssl ? "https" : "http"}://${domain}/delete/${id}/${del_key}`
     }
 

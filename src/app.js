@@ -16,8 +16,6 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.static(path.join(__dirname, '../images'))); //For serving images
-
 function forceSSL(req, res, next) {
     if(!req.secure)
     {
@@ -62,41 +60,11 @@ app.get("/", (req,res) => {
 });
 
 const replacement_image = require(path.join(__dirname, 'routes/GET/replacement_image.js'));
+const getID = require(path.join(__dirname, 'routes/GET/getID.js'))(enmap);
 
-app.get("/:id", (req,res) => {
-
-    const id = req.params.id;
-
-    if (req.subdomains.length) {
-        //ID is a filename (has extension) thus a failed image request
-        if (id.includes("."))
-            return replacement_image( req, res );
-        
-        let obj = enmap.get(req.params.id);
-        if (!obj) {
-            RES({code: 404, msg:"ID not found"});
-            return res.status(404).render("index", {message: "ID not found"});
-        }
-        else if (!obj.url && !obj.text) {
-            RES({code: 404, msg:"ID not found"});
-            return res.status(404).render("index", {message: "ID not found"});
-        }
-        
-        if (obj.type === "text")
-            res.render("text",{text: obj.text});
-
-        if (obj.type === "url")
-            res.redirect(obj.url.includes("://") ? obj.url : `http://${obj.url}`);
-        
-        //somehow a request that has an image ID but no file extension...
-        if (obj.type === "image") {
-            RES({code: 400, msg:"incomplete image request"});
-            res.status(400).send("Incomplete image request");
-        }
-
-    }
-    else res.render('index', {message: "Page not found"});
-});
+//Client is trying to retrieve a database entry
+app.get("/:id", getID);
+app.get("/i/:id", getID);
 
 let serviceNotEnabled = (req, res) => res.status("400").send("This service is not enabled");
 
