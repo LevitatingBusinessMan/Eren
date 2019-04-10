@@ -5,10 +5,11 @@ html
         style
             include assets/tooltip.css
             include assets/text.css
+            include assets/toggle.css
     body
 
         //Instead of a contenteditable div in a pre, I use a textarea now to be able to use selectionStart & selectionEnd
-        textarea#input(class="hljs edit" type="text" spellcheck="false")= (text || "//Hello world!")
+        textarea#input(class="hljs edit" type="text" spellcheck="false" transparent)= (text || "//Hello world!")
 
         div#linenumber-containter(class="hljs")
 
@@ -17,12 +18,21 @@ html
 
         div#menu
             a#eren(onclick="home()" href="#" style="cursor:pointer; display:block;") Eren
+
             div(class="btn edit tooltip" onclick="save()" style="display:inline-block")
                 include assets/save.pug
                 span(class="tooltiptext right") save
             div(class="btn edit tooltip" onclick="back()" style="display:inline-block")
                 include assets/back.pug
                 span(class="tooltiptext right") back
+            <br/>
+
+            div#switch-container
+                span#switch-span Live hljs
+                span#toggle-highligting(class="switch-button" checked onclick="toggleSyntaxHighlighting()")
+                <br/>
+                <br/>
+                span#detected-lang Detected:
 
         script.
 
@@ -51,6 +61,29 @@ html
                 -webkit-text-fill-color to specificly make the text transparent.
             */
             
+            let live=true;
+            function toggleSyntaxHighlighting() {
+                let el = document.getElementById("toggle-highligting");
+                live = !live;
+
+                //Turn live HLJS off
+                if (el.hasAttribute("checked")) {
+                    el.removeAttribute("checked")
+                    output.style = "display:none;"
+                    input.removeAttribute("transparent");
+                    document.getElementById("detected-lang").innerHTML = "Detected: " + "disabled"; 
+                }
+
+                //Turn live HLJS on
+                else {
+                    el.setAttribute("checked", "")
+                    input.setAttribute("transparent", "");
+                    output.style = "display: block";
+                    update()
+                }
+
+            }
+
            const input = document.getElementById("input");
            const code = document.getElementById("output");
 
@@ -73,7 +106,11 @@ html
             });
 
             function update() {
-                code.innerHTML = hljs.highlightAuto(input.value).value;
+                if (live) {
+                    const hljs_out = hljs.highlightAuto(input.value);
+                    code.innerHTML = hljs_out.value;
+                    document.getElementById("detected-lang").innerHTML = "Detected: " + hljs_out.language; 
+                }
 
                 const lines = input.value.split(/\n/).length;
 

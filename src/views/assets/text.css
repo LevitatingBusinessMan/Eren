@@ -3,6 +3,7 @@ body {
 }
 
 #output, #input {
+    box-sizing: content-box;
     font-size: 15px;
     font-family: monospace;
     position: absolute;
@@ -18,6 +19,9 @@ body {
     z-index: 1;
     outline: none;
     color: white; /* caret */
+}
+
+#input[transparent] {
     background: transparent;
     -webkit-text-fill-color: transparent;
 }
@@ -41,6 +45,7 @@ body {
 }
 
 #menu {
+    color: white;
     z-index: 2;
     text-align: center;
     font-family: montserrat;
@@ -48,7 +53,33 @@ body {
     right: 0;
     top: 0;
     width: 200px;
-    height: 500px;
+    height: 100%;
+}
+
+#menu #detected-lang {
+    white-space: nowrap;
+    text-align: center;
+    font-size: 13px;
+    margin-top: 15px;
+    margin-left: auto;
+}
+
+#menu #switch-container {
+    position: absolute;
+    width: 169px;
+    bottom: 40px;
+    left: 31px;
+}
+
+#menu #switch-span {
+    margin-right: 9px;
+    top: 5px;
+    left: 20px;
+    position: absolute;
+}
+
+#menu .switch-button {
+    left: 96px;
 }
 
 #eren {
