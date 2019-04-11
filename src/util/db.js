@@ -1,10 +1,10 @@
 const path = require("path");
 const config = require(path.join(__dirname, "../../config/config"));
 const bcrypt = require("bcrypt");
-const r = require("rethinkdbdash")({db: config.db});
+const r = require("rethinkdbdash")(config.Rethink);
 
 //Check if DB exists
-r.dbList().contains(config.db).do(exists => r.branch(exists, {dbs_created:0}, r.dbCreate(config.db))).run();
+r.dbList().contains(config.Rethink.db).do(exists => r.branch(exists, {dbs_created:0}, r.dbCreate(config.Rethink.db))).run();
 
 //Check for Units table
 r.tableList().contains("units").do(exists => r.branch(exists, {dbs_created:0}, r.tableCreate("units"))).run()

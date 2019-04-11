@@ -1,11 +1,10 @@
 module.exports = {
     "domain": "example.com",
     "ssl": true,
+    "admin": {email: "rein@reinfernhout.xyz", pass:"admin"},
     "force_ssl": false,
-    "keys": ["pass"],
-    "key_specifics": require(path.join(__dirname, "./keys.json")),
-    "DB": "Eren", // Name of Rethink database
-    "port": 8080,
+    "db": "Eren", // Name of Rethink database
+    "port": 443,
     "services": {
         "image": true,
         "text": true,
