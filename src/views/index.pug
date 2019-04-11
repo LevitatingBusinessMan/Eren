@@ -1,4 +1,28 @@
-if message
-    p=message
-else
-    p This is Reins shareX server, nothing to see here just yet :o
+html
+    head
+    style
+        include assets/index.css
+    body
+        h1#title Reins ShareX server
+        
+        if message
+            p #{message}
+            button(onclick="home()" class="btn")#home back
+        else     
+            include includes/login_window.pug    
+
+            div#opener-container
+                button#opener(onclick="ActivateWindow(this)" class="btn") Login
+                div#holes
+            
+
+        script. 
+                function home() {
+                    let hostname = window.location.hostname;
+                    if (hostname.split(".").length > 2) {
+                        let hostname_array = hostname.split(".");
+                        hostname_array.shift();
+                        hostname = hostname_array.join(".");
+                    }
+                    location.href = "http://" + hostname;
+                }

@@ -1,5 +1,6 @@
 const path = require("path");
 const config = require(path.join(__dirname, "../../config/config"));
+const bcrypt = require("bcrypt");
 const r = require("rethinkdbdash")({db: config.db});
 
 //Check if DB exists
@@ -15,6 +16,28 @@ r.tableList().contains("tokens").do(exists => r.branch(exists, {dbs_created:0}, 
 //Check for users table
 r.tableList().contains("users").do(exists => r.branch(exists, {dbs_created:0}, r.tableCreate("users", {primaryKey: "email"}))).run()
 .then(() => r.table("users").indexList().contains("token").do(exists => r.branch(exists, {created:0}, r.table("users").indexCreate("token"))).run())
-.then(() => r.table("users").getAll("admin", index="token").count().eq(1).do(exists => r.branch(exists, {inserted:0},  r.table("users").insert(Object.assign(config.admin,{token:"admin"})))).run())
+
+//Check if admin user was made
+.then(() => r.table("users").getAll("admin", index="token").count().eq(1).run().then(exists => {
+    if (!exists)
+        bcrypt.hash(config.admin.pass, 12, function(err, hash) {
+            if (err)
+                throw err;
+            r.table("users").insert({
+                email:config.admin.email,
+                password:hash,
+                signup_token:"admin",
+                sharex_tokens:[]
+            }).run()
+        })
+}))
+
+/*
+User:
+    email
+    password
+    signup_token (to link sharex requests to a user and keep track of which users used which signup tokens)
+    sharex_tokens "array" (gets created whenever a sharex uploader config is made, each can be revoked)
+*/
 
 module.exports = r;

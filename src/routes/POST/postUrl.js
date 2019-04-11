@@ -25,12 +25,6 @@ module.exports = (req, res) => {
     let domain = config.domain;
     let prefix = config.prefix.url;
 
-    const key = req.body.key;
-    if (config.key_specifics[key]) {
-        domain = config.key_specifics[key].base;
-        prefix = config.key_specifics[key].image;
-    }
-
     const response = {
         url: `${config.ssl ? "https" : "http"}://${prefix.length ? `${prefix}.${domain}/${id}` : `${domain}/i/${id}`}`,
         delete: `${config.ssl ? "https" : "http"}://${domain}/delete/${del_key}`

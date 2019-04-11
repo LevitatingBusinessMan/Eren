@@ -1,0 +1,206 @@
+div#login_window(style="visibility:hidden;")
+    p Email:
+    input#email(type="text")
+    p Password:
+    input#password(type="password")
+
+    //Define a login_cb function beforehand to get a callback
+    button(onclick="login(login_cb)" class="btn") Login
+
+    a#signup(href="/signing_up") No account? How to sign up
+
+    script.
+
+        let login_cb = null;
+
+        let session = null;
+
+        function login() {
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            const email_regex = /[a-z,0-9.]+@[a-z,0-9.]+/;
+
+            if (!email.match(email_regex))
+                return alert("Email doesn't match requirements, also this alert is a placeholder");
+            
+            if(!password.length)
+                return alert("Please fill in both fields");
+            
+            fetch("/api/login", {
+                method: "POST",
+                credentials: 'same-origin',
+                body: JSON.stringify({email, password}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => {
+
+                //OK-results
+                if (res.ok) {
+                    res.json()
+                        .then(res => {
+                            alert("Logged in succesfully, also this alert is a placeholder");
+                            deActivateLoginWindow();
+                            console.log("Session:")
+                            console.log(res.session)
+
+                            session = res.session;
+                            if (login_cb)
+                                login_cb();
+                        })
+                }
+                
+                //non-OK results
+                else {
+                    if (res.status !== 200) {
+                        //note: sadly fetch will always spam every non-200 requests in console
+                        if (res.status == 401) {
+                            alert("Wrong password or email, also this alert is a placeholder");
+                        } else alert("Some error occured, also this alert is a placeholder");
+                    }
+                }
+            })
+
+
+        }
+
+        const login_window = document.getElementById("login_window");
+
+        let activated = false;
+
+        function activateLoginWindow(btn) {
+            activated = true;
+            login_window.style = "visibility:visible;";
+            login_window.setAttribute("class","fadein")
+            document.getElementsByTagName("body")[0].style = "background-color: #ccc;";
+
+            window.addEventListener('click', clickhandler(btn));
+        }
+
+        function deActivateLoginWindow() {
+            activated = false;
+            login_window.setAttribute("class","fadeout")
+            setTimeout(() => { if(!activated) login_window.style = "visibility:hidden;"}, 1800)
+            document.getElementsByTagName("body")[0].style = "background-color: #fff;";
+
+            window.removeEventListener('click', clickhandler);
+        }
+
+        const clickhandler = (btn) => (e) => {
+            //Naturally this checks if the click was the initial button opening the window, but in some cases the element firing the onclick event opening the window
+            //is not the target of the click event here. That's why you can add the opener class to any elements that fire the click event when opening the window.
+            if (!document.getElementById('login_window').contains(e.target) && btn !== e.target && !e.target.classList.contains("opener"))
+                deActivateLoginWindow(); 
+        }
+
+    style. 
+        #login_window {
+            padding-top: 70px;
+            width: 500px;
+            height: 400px;
+            border-radius: 20px;
+            left: calc(50% - 250px);
+            z-index: 5;
+            top: 20%;
+            position: absolute;
+            background-color: #fff;
+            font-family: montserrat, sans-serif;
+            font-weight: 600;
+        }
+
+        #login_window #signup {
+            text-align: center;
+        }
+
+        body {
+            transition: 2s;
+        }
+
+        .fadein, .fadein * {
+            -webkit-animation: fadein s; /* Safari, Chrome and Opera > 12.1 */
+            -moz-animation: fadein 2s; /* Firefox < 16 */
+            -ms-animation: fadein 2s; /* Internet Explorer */
+            animation: fadein 2s;
+        }
+
+        .fadeout, .fadeout * {
+            -webkit-animation: fadeout 2s; /* Safari, Chrome and Opera > 12.1 */
+            -moz-animation: fadeout 2s; /* Firefox < 16 */
+            -ms-animation: fadeout 2s; /* Internet Explorer */
+            animation: fadeout 2s;
+        }
+
+        #login_window input, #login_window button {
+            outline: none;
+        }
+
+        #login_window button {
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 25px;
+            height: 35px;
+        }
+
+        #login_window * {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 80%;
+            margin-bottom: 20px;
+            margin-top: 0px;
+        }
+
+        /*wtf*/
+        #login_window script, #login_window style  {
+            display: none;
+        }
+
+        /* FOR SOME reason reversing the keyframes won't work*/
+
+        @keyframes fadein {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        @keyframes fadeout {
+            from { opacity: 1; }
+            to   { opacity: 0; }
+        }
+
+        /* Firefox < 16 */
+        @-moz-keyframes fadein {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        @-moz-keyframes fadeout {
+            from { opacity: 1; }
+            to   { opacity: 0; }
+        }
+
+        /* Safari, Chrome and Opera > 12.1 */
+        @-webkit-keyframes fadein {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        @-webkit-keyframes fadein {
+            from { opacity: 1; }
+            to   { opacity: 0; }
+        }
+
+        /* Internet Explorer */
+        fadein {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        fadein {
+            from { opacity: 1; }
+            to   { opacity: 0; }
+        }
+

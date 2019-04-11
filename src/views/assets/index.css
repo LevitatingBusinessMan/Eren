@@ -1,0 +1,69 @@
+* {
+    font-family: montserrat, sans-serif;
+    font-weight: 600;
+}
+
+body {
+    text-align: center;
+}
+
+#title {
+    margin-top: 10%;
+    font-size: 60px;
+}
+
+#home {
+    position: absolute;
+    bottom: 50px;
+    width: 100px;
+    height: 50px;
+    left: calc(50% - 50px);
+}
+
+.btn {
+    height: 50px;
+    border-radius: 50px;
+    color: white;
+    background-color: black;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+#opener-container {
+    margin-top: 50px;
+    padding: 4px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 8px solid black;
+    position: relative;
+    display: inline-block;
+}
+
+#opener-container #opener {
+    width: inherit;
+    height: inherit;
+    position: absolute;
+    z-index: 2;
+    left: 4px; /*padding of parent*/
+}
+
+#opener-container #holes {
+    width: 100px;
+    height: 10px;
+    background-color: white;
+    top: 33px;
+    position: absolute;
+    right: -12px;
+
+    -ms-animationspin:spin 8s linear infinite;
+    -webkit-animation:spin 8s linear infinite;
+    -moz-animation:spin 8s linear infinite;
+    animation:spin 8s linear infinite;
+}
+
+@-ms-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }

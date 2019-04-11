@@ -8,6 +8,8 @@ html
             include assets/toggle.css
     body
 
+        include includes/login_window.pug
+
         //Instead of a contenteditable div in a pre, I use a textarea now to be able to use selectionStart & selectionEnd
         textarea#input(class="hljs edit" type="text" spellcheck="false" transparent)= (text || "//Hello world!")
 
@@ -16,16 +18,21 @@ html
         pre
             code#output(class="hljs")
 
-        div#menu
+        div#menu()
             a#eren(onclick="home()" href="#" style="cursor:pointer; display:block;") Eren
 
-            div(class="btn edit tooltip" onclick="save()" style="display:inline-block")
+            div(class="btn edit tooltip" onclick="save(this)" style="display:inline-block")
                 include assets/save.pug
                 span(class="tooltiptext right") save
             div(class="btn edit tooltip" onclick="back()" style="display:inline-block")
                 include assets/back.pug
                 span(class="tooltiptext right") back
             <br/>
+
+            //For login_window
+            script. 
+                document.getElementsByClassName("save-btn-path")[0].parentElement.parentElement.setAttribute("class","opener");
+                document.getElementsByClassName("save-btn-path")[0].setAttribute("class","save-btn-path opener")
 
             div#switch-container
                 span#switch-span Live hljs
@@ -129,11 +136,14 @@ html
                 location.href = "http://" + hostname;
             }
 
-            function save() {
+            function save(btn) {
+
+                if (!session) {
+                    login_cb = save;
+                    return activateLoginWindow(btn);
+                }
 
                 const text = input.value;
-
-                const key = prompt("Key:");
 
                 fetch("/s/text", {
                     method: "POST",
@@ -141,17 +151,21 @@ html
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        text,
-                        key
+                        text
                     })
                 }).then(response => {
-                    if (response.status !== 200)
-                        alert(response.statusText);
-                    else
-                        return response.json();
-                }).then(response => {
-                    window.location.href = response.url;
-                })
+                    if (response.status !== 200) {
+                        alert("Something went wrong, also this alert is a placeholder");
+                        console.log(response.err)
+                    }
+                    else {
+                        response.json()
+                        .then(response => {
+                            window.location.href = response.url;
+                        })
+                    }
+                });
+                        
             }
 
             function back() {

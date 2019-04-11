@@ -12,12 +12,14 @@
   "author": "LevitatingBusinessMan",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^3.0.5",
     "better-sqlite-pool": "^0.2.0",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.2",
     "dayjs": "^1.8.12",
     "express": "^4.16.3",
     "express-fileupload": "^0.4.0",
+    "express-session": "^1.15.6",
     "pug": "^2.0.3",
     "rethinkdbdash": "^2.3.31"
   },

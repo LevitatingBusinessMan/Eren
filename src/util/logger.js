@@ -29,7 +29,7 @@ RES = rsp => {
     if (rsp.code == 401)
         code = red(code);
 
-    console.log(`RES: ${code} ${rsp.msg}`)
+    console.log(`RES: ${code} ${rsp.msg ? rsp.msg : JSON.stringify(rsp.data)}`)
 }
 
 //ACT IS DONE MANUALLY

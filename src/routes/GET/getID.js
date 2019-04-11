@@ -6,7 +6,7 @@ const r = require(path.join(__dirname, "../../util/db"));
 module.exports = async ( req, res ) => {
     //split id of any file extensions
     const id = req.params.id.split(".")[0];
-    if (req.subdomains.length || req.path.match(/(\/i\/[a-z,A-Z]*)(\.[a-z,A-Z]*)?/)) {
+    if (req.subdomains.length || req.path.match(/(\/i\/[a-z,A-Z]*)(\.[a-z,A-Z]*)?/)) { //matches: /i/id and /i/id.ext
         let obj = await r.table("units").get(id).run();
         if (!obj) {
 

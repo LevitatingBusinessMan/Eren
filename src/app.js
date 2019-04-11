@@ -3,12 +3,21 @@ const fs = require("fs"),
     express = require("express"),
     fileUpload = require("express-fileupload"),
     {REQ, RES} = require(path.join(__dirname, "util/logger")),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    expressSession = require('express-session');
     config = require(path.join(__dirname, "../config/config"));
 
 const app = express();
 app.use(fileUpload());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+
+app.use(expressSession({
+    secret: "Eren", 
+    cookie: {
+        secure: config.force_ssl ? true : false
+    }
+}))
 
 app.use((req, res, next) => {
     REQ(req);
@@ -52,22 +61,23 @@ app.get("/", (req,res) => {
     else res.render('index');
 });
 
-const replacement_image = require(path.join(__dirname, 'routes/GET/replacement_image.js'));
 const getID = require(path.join(__dirname, 'routes/GET/getID.js'));
 
-const create_token = require(path.join(__dirname, 'routes/GET/create_token.js'))
-app.get("/create_token", create_token);
+app.get("/signing_up", (req, res) => res.render("index", {message: `If you want to start using Eren yourself you can request a token at: ${config.admin.email},
+or host your own instance: https://github.com/LevitatingBusinessMan/Eren`}));
 
-//Client is trying to retrieve a database entry
-app.get("/:id", getID);
-app.get("/i/:id", getID);
-
+app.get("/login", (req, res) => res.render("login"));
 
 const delete_ = require(path.join(__dirname, 'routes/GET/delete.js'))
 app.get("/delete/:del_key", delete_);
 
-//Keycheck middleware
-app.post("*", keyCheck);
+//Client is trying to retrieve a database entry
+app.get("/:id", getID); //prefix.domain.ext/id
+app.get("/i/:id", getID); //domain.ext/i/id
+
+const auth = require(path.join(__dirname, 'util/auth.js'));
+//Authentication middleware
+app.post("/s/*", auth);
 
 /**
  * By using this function we can log all responses and/or format them
@@ -82,7 +92,7 @@ function send(fn) {
 }
 
 
-let serviceNotEnabled = (req, res) => res.status("400").send("This service is not enabled");
+let serviceNotEnabled = (req, res) => res.status("400").send({err:"This service is not enabled"});
 
 //POST
 const postImage = require(path.join(__dirname, 'routes/POST/postImage.js'))
@@ -96,22 +106,9 @@ app.post("/s/url", config.services.url ? send(postUrl) : serviceNotEnabled);
 
 app.listen(config.port, () => console.log("Listening on port: " + config.port));
 
-function keyCheck(req, res, next) {
+//API (endpoints only used by frontend)
+const create_signup_token = require(path.join(__dirname, 'routes/api/create_signup_token.js'))
+app.get("/api/create_token", create_signup_token);
 
-    if (!req.body) {
-        RES({code: 400, msg: "Missing key!"});
-        return res.status(400).send(JSON.stringify({err:"Missing key!"}));
-    }
-    
-    if (!req.body.key) {
-        RES({code: 400, msg: "Missing key!"});
-        return res.status(400).send(JSON.stringify({err:"Missing key!"}))
-    }
-
-    if (!config.keys.includes(req.body.key)) {
-        RES({code: 401, msg: "Invalid key!"});
-        return res.status(401).send(JSON.stringify({err:"Invalid key!"}));
-    }
-
-    next();
-}
+const api_login = require(path.join(__dirname, 'routes/api/login.js'))
+app.post("/api/login", api_login);
