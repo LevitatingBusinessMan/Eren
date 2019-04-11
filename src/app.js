@@ -3,8 +3,10 @@ const fs = require("fs"),
     express = require("express"),
     fileUpload = require("express-fileupload"),
     {REQ, RES} = require(path.join(__dirname, "util/logger")),
-    bodyParser = require('body-parser'),
-    expressSession = require('express-session');
+    r = require(path.join(__dirname, "util/db")),
+    bodyParser = require("body-parser"),
+    expressSession = require("express-session"),
+    RDBStore = require("session-rethinkdb")(expressSession),
     config = require(path.join(__dirname, "../config/config"));
 
 const app = express();
@@ -12,8 +14,14 @@ app.use(fileUpload());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 
+const store = new RDBStore(r, {
+    table: "sessions"
+});
+
+//Configure sessions
 app.use(expressSession({
-    secret: "Eren", 
+    secret: "keyboard cat",
+    store,
     cookie: {
         secure: config.force_ssl ? true : false
     }

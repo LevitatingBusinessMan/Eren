@@ -21,7 +21,8 @@
     "express-fileupload": "^0.4.0",
     "express-session": "^1.15.6",
     "pug": "^2.0.3",
-    "rethinkdbdash": "^2.3.31"
+    "rethinkdbdash": "^2.3.31",
+    "session-rethinkdb": "^2.0.1"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"
