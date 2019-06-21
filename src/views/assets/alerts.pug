@@ -1,0 +1,135 @@
+script.
+    
+    //Create container
+    window.onload = () => {
+        const container_div = document.createElement("div");
+        container_div.id = "alert_container";
+        document.body.appendChild(container_div)
+    }
+
+    //Before this was used but it didnt let me update the dom after for some reason
+    //window.onload = () => document.body.innerHTML += "<div id='alert_container'></div>"
+
+    function Alert(type, msg) {
+        const container = document.getElementById("alert_container");
+        const id = (() => {
+            let chars = "abcdefghijklmnopqrstuvwxyz".split("");
+            let id = [];
+            for (let i = 0; i < 3; i++)
+                id.push(chars[Math.floor(Math.random()*chars.length)+1])
+            return id.join("");
+        })();   
+
+        alert_html =
+            `<div id="alert_${id}" class="alert ${type}">
+                    <span class="type">${type}</span>
+                    <span class="msg">${msg}</span>
+                    <span class="closebtn" onclick="alertbox_close('${id}')">&times;</span>
+            </div>`;
+        container.innerHTML += alert_html
+
+        setTimeout(() => alertbox_close(id), 4000)
+
+    }
+
+    function alertbox_close(id) {
+        const alert_element = document.getElementById(`alert_${id}`);
+        
+        //Already got deleted
+        if (!alert_element)
+            return;
+        
+        alert_element.classList.add("closing");
+        setTimeout(() => alert_element.remove(), 1000);
+    }
+
+style. 
+    /* ALERTS */
+    #alert_container{
+        position: absolute;
+        top: 0;
+        z-index: 10;
+        margin-left: 15%;
+        margin-right: 15%;
+        width: 70%;
+    }
+
+    .alert {
+        text-align: center;
+        font-family: montserrat, arial, sans-serif;
+        color: white;
+        display: block;
+        line-height: 4px;
+        height: 50px;
+        margin: 5px auto 10px auto;
+        width: 100%;
+        border-radius: 5px;
+    }
+
+    .alert.closing {
+        animation: closeAlert 1s forwards;
+        padding: 0;
+    }
+
+    .alert.closing .closebtn {
+        display: none;
+    }
+
+    @keyframes closeAlert {
+        from {
+            width: 100%;
+            color: rgba(255,255,255,0.7);
+        }
+        to {
+            width: 0%;
+            color: rgba(255,255,255,0);
+        }
+    }
+
+    .alert span {
+        position: relative;
+        top: 50%;
+    }
+
+    .alert .type{
+        text-transform: capitalize;
+        font-weight: bold;
+        margin-right: 10px;
+        margin-left: 25px;
+    }
+
+    .alert .type::after{
+        content: "!";
+    }
+
+    .alert .closebtn {
+        margin-left: 15px;
+        margin-right: 25px;
+        font-weight: bold;
+        float: right;
+        font-size: 22px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .alert .closebtn:hover {
+        font-size: 40px;
+        margin-right: 20px;
+    }
+
+    .alert.critical{
+        background-color: rgba(255, 51, 51, 0.8);
+        border: 2px solid rgba(255, 51, 51);
+    }
+    .alert.warning{
+        background-color: rgba(255, 117, 26, 0.8);
+        border: 2px solid rgba(255, 117, 26);
+    }
+    .alert.info{
+        background-color: rgba(51, 173, 255, 0.8);
+        border: 2px solid rgb(51, 173, 255);
+    }
+    .alert.success{
+        background-color: rgba(102, 255, 51, 0.8);
+        border: 2px solid rgb(102, 255, 51);
+    }

@@ -25,10 +25,10 @@ div#login_window(style="visibility:hidden;")
             const email_regex = /[a-z,0-9.]+@[a-z,0-9.]+/;
 
             if (!email.match(email_regex))
-                return alert("Email doesn't match requirements, also this alert is a placeholder");
+                return Alert("warning", "Email doesn't match requirements");
             
             if(!password.length)
-                return alert("Please fill in both fields");
+                return Alert("warning", "Please fill in both fields");
             
             fetch("/api/login", {
                 method: "POST",
@@ -43,7 +43,7 @@ div#login_window(style="visibility:hidden;")
                 if (res.ok) {
                     res.json()
                         .then(res => {
-                            alert("Logged in succesfully, also this alert is a placeholder");
+                            //Alert("success", "Logged in succesfully");
                             deActivateLoginWindow();
                             console.log("Session:")
                             console.log(res.session)
@@ -59,8 +59,8 @@ div#login_window(style="visibility:hidden;")
                     if (res.status !== 200) {
                         //note: sadly fetch will always spam every non-200 requests in console
                         if (res.status == 401) {
-                            alert("Wrong password or email, also this alert is a placeholder");
-                        } else alert("Some error occured, also this alert is a placeholder");
+                            Alert("critical", "Wrong password or email");
+                        } else Alert("critical","Some error occured");
                     }
                 }
             })
@@ -77,11 +77,14 @@ div#login_window(style="visibility:hidden;")
             login_window.style = "visibility:visible;";
             login_window.setAttribute("class","fadein")
             document.getElementsByTagName("body")[0].style = "background-color: #ccc;";
+            console.log(login_window)
+            setTimeout(() => console.log(login_window), 100);
 
             window.addEventListener('click', clickhandler(btn));
         }
 
         function deActivateLoginWindow() {
+            console.log('deact')
             activated = false;
             login_window.setAttribute("class","fadeout")
             setTimeout(() => { if(!activated) login_window.style = "visibility:hidden;"}, 1800)
