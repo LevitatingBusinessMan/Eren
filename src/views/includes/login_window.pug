@@ -77,7 +77,6 @@ div#login_window(style="visibility:hidden;")
             login_window.style = "visibility:visible;";
             login_window.setAttribute("class","fadein")
             document.getElementsByTagName("body")[0].style = "background-color: #ccc;";
-            console.log(login_window)
             setTimeout(() => console.log(login_window), 100);
 
             window.addEventListener('click', clickhandler(btn));
