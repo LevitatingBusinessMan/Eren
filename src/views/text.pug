@@ -41,6 +41,8 @@ html
                 <br/>
                 span#detected-lang Detected:
 
+        include assets/me.js.pug
+
         script.
 
             /*
@@ -138,7 +140,7 @@ html
 
             function save(btn) {
 
-                if (!session) {
+                if (!session.logged_in) {
                     login_cb = save;
                     return activateLoginWindow(btn);
                 }

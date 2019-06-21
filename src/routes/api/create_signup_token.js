@@ -13,6 +13,6 @@ module.exports = async (req, res) => {
     r.table("tokens").insert(token).run();
 
 
-    res.status("200").send(token);
+    res.status("200").send({token});
     console.log(`ACT: ${yellow("[CREATE_TOKEN]")} [signup] ${token.token}`);
 }

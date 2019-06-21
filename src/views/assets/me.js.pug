@@ -1,0 +1,22 @@
+script.
+    if (!session)
+        var session = null;
+    
+    fetch("/api/me", {
+        method: "GET",
+        headers: {
+            "credentials": "include"
+        }
+    }).then(res => {
+        if (res.status !== 200) {
+            alert("Something went wrong retrieving user data, also this alert is a placeholder");
+            console.log(res.err)
+        }
+        
+        else res.json().then(res => {
+            console.log("Session:")
+            console.log(res)
+            session = res;
+            if (me_cb) me_cb();
+        })
+    })

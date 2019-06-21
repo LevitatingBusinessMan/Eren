@@ -3,20 +3,38 @@ html
     style
         include assets/index.css
     body
-        h1#title Reins ShareX server
+        h1#title EREN
         
         if message
             p #{message}
             button(onclick="home()" class="btn")#home back
         else     
-            include includes/login_window.pug    
 
-            div#opener-container
-                button#opener(onclick="activateLoginWindow(this)" class="btn") Login
-                div#holes
-            
+            if logged_in
+                div#options_dropdown
+                    p#email_button #{user}
+                    div#options_dropdown_content
+                        a#settings(href="/sharex") Create ShareX
+                        a#settings(href="/settings") Settings
+                        a#logout(href="/api/logout") Logout
+                div#page_buttons_cont
+                    if services.url
+                        button#url_button(class="btn threeD page_button" onclick="goto_sub('" + prefix.url +"')") #{prefix.url}
+                    if services.image
+                        button#image_button(class="btn threeD page_button" onclick="goto_sub('" + prefix.image +"')") #{prefix.image}
+                    if services.text
+                        button#text_button(class="btn threeD page_button" onclick="goto_sub('" + prefix.text +"')") #{prefix.text}
+            else
+                include includes/login_window.pug    
+                div#opener-container
+                    button#opener(onclick="activateLoginWindow(this)" class="btn") Login
+                    div#holes
 
         script. 
+
+                //Refresh page after login
+                login_cb = home;
+
                 function home() {
                     let hostname = window.location.hostname;
                     if (hostname.split(".").length > 2) {
@@ -25,4 +43,8 @@ html
                         hostname = hostname_array.join(".");
                     }
                     location.href = "http://" + hostname;
+                }
+
+                function goto_sub(sub) {
+                    location.href = `http://${sub}.#{domain}`;
                 }

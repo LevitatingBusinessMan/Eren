@@ -13,7 +13,9 @@ div#login_window(style="visibility:hidden;")
 
         let login_cb = null;
 
-        let session = null;
+        // In case session isn't already defined by the parent file.
+        if (!session)
+            var session = null;
 
         function login() {
 
