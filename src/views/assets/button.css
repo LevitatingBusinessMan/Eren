@@ -1,0 +1,29 @@
+/* Kirito style buttons */
+
+.btn {
+    height: 50px;
+    border-radius: 50px;
+    color: white;
+    background-color: black;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn.threeD {
+    border-radius: 10px;
+    box-shadow: 0 3px #999;
+    top: 0;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.btn.threeD:hover {
+    top: -4px !important;
+    box-shadow: 0 7px #999;
+    transition: none;
+}
+.btn.threeD:active {
+    top: 0px !important;
+    box-shadow: 0 3px #999;
+}
