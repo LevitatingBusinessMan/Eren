@@ -17,6 +17,7 @@ script.
             console.log("Session:")
             console.log(res)
             session = res;
-            if (me_cb) me_cb();
+            if (typeof me_cb !== 'undefined')
+                me_cb();
         })
     })
