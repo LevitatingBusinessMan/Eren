@@ -24,7 +24,7 @@ module.exports = (req, res, next) => {
         }
 
         let user = r.table("users").getAll(req.body.identifier, {index:"signup_token"});
-        if (user)
+        if (user.length)
             user = user[0];
 
         if (!user.sharex_tokens.includes(req.body.sharex_token)) {
