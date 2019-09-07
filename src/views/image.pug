@@ -1,1 +1,85 @@
-p soon you'll be able to upload images here
+html
+    head
+        style
+            include assets/default.css
+            include assets/button.css
+            include assets/image.css
+    body
+        h1#title Image
+        
+        span#eren_back(onclick="home()")
+            include assets/back.pug
+            span#eren_back--text EREN
+
+        if logged_in
+                div#options_dropdown
+                    p#email_button #{user}
+                    div#options_dropdown_content
+                        a#settings(href="/sharex") Create ShareX
+                        a#settings(href="/settings") Settings
+                        a#logout(href="/api/logout") Logout
+                
+                div#dropzone_background
+                    p DRAG IMAGE HERE
+                    div#dropzone(ondrop="dropHandler(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondragover="event.preventDefault()")
+                    ul#files
+                        li
+                            span#files--filename fileName
+                            span#files--remove x
+                p OR
+                button.btn Click here
+
+        else
+            include includes/login_window.pug    
+            div#opener-container
+                button#opener(onclick="activateLoginWindow(this)" class="btn") Login
+                div#holes
+
+        script.
+            login_cb = location.reload.bind(location);
+            const dropzone_bg = document.getElementById("dropzone_background");
+            const dropzone = document.getElementById("dropzone");
+
+            function dropHandler(e) {
+                e.preventDefault();
+                dropzone_bg.classList.remove("hover");
+
+                if (e.dataTransfer.items) {
+                    // Use DataTransferItemList interface to access the file(s)
+                    for (var i = 0; i < e.dataTransfer.items.length; i++) {
+                    
+                        if (e.dataTransfer.items[i].kind === 'file') {
+                            var file = e.dataTransfer.items[i].getAsFile();
+                            console.log('... file[' + i + '].name = ' + file.name);
+                        }
+
+                    }
+
+                }
+                 else {
+                    // Use DataTransfer interface to access the file(s)
+                    for (var i = 0; i < e.dataTransfer.files.length; i++) {
+                        console.log('... file[' + i + '].name = ' + e.dataTransfer.files[i].name);
+                    }
+                }
+
+            }
+
+            function dragEnter(e) {
+                dropzone_bg.classList.add("hover");
+            }
+            
+            function dragLeave(e) {
+                e.preventDefault();
+                dropzone_bg.classList.remove("hover");
+            }
+
+            function home() {
+                let hostname = window.location.hostname;
+                if (hostname.split(".").length > 2) {
+                    let hostname_array = hostname.split(".");
+                    hostname_array.shift();
+                    hostname = hostname_array.join(".");
+                }
+                location.href = "http://" + hostname;
+            }

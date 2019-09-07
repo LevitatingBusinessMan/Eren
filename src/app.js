@@ -64,24 +64,27 @@ if (!fs.existsSync(path.join(__dirname,'../data')))
 
 //GET
 app.get("/", (req,res) => {
-    if (req.subdomains.length) {
-        if (req.subdomains.includes(config.prefix.image) && config.services.image) {
-            res.render("image");
-        }
-        if (req.subdomains.includes(config.prefix.text) && config.services.text) {
-            res.render("text");
-        }
-        if (req.subdomains.includes(config.prefix.url) && config.services.url) {
-            res.render("shorten");
-        }
-    }
-    else res.render('index', {
+
+    const data = {
         logged_in : req.session.logged_in,
         prefix: config.prefix,
         services: config.services,
         domain: config.domain,
         user: req.session.user
-    });
+    }
+
+    if (req.subdomains.length) {
+        if (req.subdomains.includes(config.prefix.image) && config.services.image) {
+            res.render("image", data);
+        }
+        if (req.subdomains.includes(config.prefix.text) && config.services.text) {
+            res.render("text", data);
+        }
+        if (req.subdomains.includes(config.prefix.url) && config.services.url) {
+            res.render("shorten", data);
+        }
+    }
+    else res.render('index', data);
 });
 
 const getID = require(path.join(__dirname, 'routes/GET/getID.js'));
