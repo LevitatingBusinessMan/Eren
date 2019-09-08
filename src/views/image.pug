@@ -4,30 +4,33 @@ html
             include assets/default.css
             include assets/button.css
             include assets/image.css
+        include assets/alerts.pug 
     body
         h1#title Image
         
         span#eren_back(onclick="home()")
-            include assets/back.pug
+            include assets/back.svg.pug
             span#eren_back--text EREN
 
         if logged_in
-                div#options_dropdown
-                    p#email_button #{user}
-                    div#options_dropdown_content
-                        a#settings(href="/sharex") Create ShareX
-                        a#settings(href="/settings") Settings
-                        a#logout(href="/api/logout") Logout
-                
-                div#dropzone_background
-                    p DRAG IMAGE HERE
-                    div#dropzone(ondrop="dropHandler(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondragover="event.preventDefault()")
-                    ul#files
-                        li
-                            span#files--filename fileName
-                            span#files--remove x
-                p OR
-                button.btn Click here
+            div#options_dropdown
+                p#email_button #{user}
+                div#options_dropdown_content
+                    a#settings(href="/sharex") Create ShareX
+                    a#settings(href="/settings") Settings
+                    a#logout(href="/api/logout") Logout
+            
+            div#dropzone_background
+                p DRAG IMAGE HERE
+                div#dropzone(ondrop="dropHandler(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondragover="event.preventDefault()")
+                ul#files
+            div#dropzone_upload(onclick="upload()")
+                span UPLOAD
+                include assets/arrow.svg.pug
+            p OR
+            button.btn.threeD(onclick="handleButtonClick()") Open explorer
+
+            input#file_input(type="file" accept="image/*" onchange="handleFileUpload()" multiple hidden)
 
         else
             include includes/login_window.pug    
@@ -39,30 +42,65 @@ html
             login_cb = location.reload.bind(location);
             const dropzone_bg = document.getElementById("dropzone_background");
             const dropzone = document.getElementById("dropzone");
+            const files_list = document.getElementById("files");
+            const file_input = document.getElementById("file_input");
+            const files = {};
+
+            function handleButtonClick() {
+                file_input.click();
+            }
+
+            //Handle all files added through the explorer
+            function handleFileUpload() {
+
+                for (let i=0; i < file_input.files.length; i++)
+                    fileHandler(file_input.files[i])
+
+            }
+
+            function fileHandler(file) {
+                    
+                    //File is already present in filelist
+                    if (files[file.name])
+                        return Alert("critical", "Duplicate filename!")
+
+
+                    files[file.name] = file;
+                    
+
+                    if (!dropzone_bg.classList.contains("has_files"))
+                        dropzone_bg.classList.add("has_files");
+                    
+                    const listItem = document.createElement("li");
+
+                    listItem.innerHTML = `<span id="files--filename">${file.name}</span><span id="files--remove" onclick="removeFile('${file.name}', this)">x</span>`;
+
+                    files_list.appendChild(listItem);
+            }
+
+            function removeFile(fileName, element) {
+
+                delete files[fileName];
+                element.parentNode.remove();
+
+                if (files_list.children.length < 1 && dropzone_bg.classList.contains("has_files"))
+                    dropzone_bg.classList.remove("has_files");
+            }
 
             function dropHandler(e) {
                 e.preventDefault();
                 dropzone_bg.classList.remove("hover");
 
-                if (e.dataTransfer.items) {
+                if (e.dataTransfer.items)
                     // Use DataTransferItemList interface to access the file(s)
-                    for (var i = 0; i < e.dataTransfer.items.length; i++) {
-                    
-                        if (e.dataTransfer.items[i].kind === 'file') {
-                            var file = e.dataTransfer.items[i].getAsFile();
-                            console.log('... file[' + i + '].name = ' + file.name);
-                        }
-
-                    }
-
-                }
-                 else {
+                    for (let i = 0; i < e.dataTransfer.items.length; i++)
+                        if (e.dataTransfer.items[i].kind === "file") 
+                            fileHandler(e.dataTransfer.items[i].getAsFile())
+                
+                else
                     // Use DataTransfer interface to access the file(s)
-                    for (var i = 0; i < e.dataTransfer.files.length; i++) {
-                        console.log('... file[' + i + '].name = ' + e.dataTransfer.files[i].name);
-                    }
-                }
-
+                    for (let i = 0; i < e.dataTransfer.files.length; i++)
+                       fileHandler(e.dataTransfer.files[i].name)
             }
 
             function dragEnter(e) {
@@ -72,6 +110,38 @@ html
             function dragLeave(e) {
                 e.preventDefault();
                 dropzone_bg.classList.remove("hover");
+            }
+
+            function upload() {
+
+                for (var fileName in files) {
+
+                    const formData = new FormData();
+
+                    formData.append("image", files[fileName]);
+
+                    fetch("/s/image", {
+                        method: "POST",
+                        headers: {
+                            "credentials": "include"
+                        },
+                        body: formData
+                    }).then(response => {
+                        if (response.status !== 200) {
+                            Alert("critical","Something went wrong");
+                            console.log(response.err)
+                        }
+                        else {
+                            response.json()
+                            .then(response => {
+                                Alert("success", `Successfully uploaded ${fileName}`)
+                            })
+                        }
+                    });
+
+                }                
+
+                
             }
 
             function home() {

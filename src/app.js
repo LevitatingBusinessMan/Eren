@@ -11,7 +11,7 @@ const fs = require("fs"),
 
 const app = express();
 app.use(fileUpload());
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 
 const store = new RDBStore(r, {
     table: "sessions"

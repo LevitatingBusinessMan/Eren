@@ -1,64 +1,156 @@
+body {
+    z-index: -2;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
 /* DROPZONE */
 
 #dropzone_background {
     width: 500px;
-    height: 140px;
+    height: 100px;
     background: #ccc;
     border-radius: 10px;
     display: inline-block;
     box-shadow: 3px 3px 10px grey;
+    border: 3px solid #ccc;
     box-sizing: border-box;
+    transition: .2s linear;
 }
+
+#dropzone_background.has_files {
+    height: 140px;
+}
+
 
 #dropzone_background.hover {
-    border: 3px solid grey;
+    border-color: grey;
 }
 
-#dropzone_background.hover p {
-    margin-top: 27px;
+#dropzone_upload {
+    display: inline-block;
+    opacity: 0;
+    left: 50%;
+    height: 60px;
+    margin-top: 47px;
+    margin-left: 250px;
+    /* width: 60px; */
+    width: 60px;
+    position: absolute;
+    border-radius: 10px;
+    cursor: pointer;
+    background: black;
+    transition: .2s;
+}
+
+#dropzone_upload:hover {
+    width: 210px;
+}
+
+#dropzone_upload span {
+    color: white;
+    opacity: 0;
+    display: inline;
+    font-size: 30px;
+    position: relative;
+    left: -20px;
+    top: 12px;
+    transition: opacity .2s;
+}
+
+#dropzone_upload:hover span {
+    opacity: 1;
+}
+
+#dropzone_upload:hover svg {
+    transform: rotate(90deg)
+}
+
+#dropzone_upload svg {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    float: right;
+    stroke-width: 5px;
+    right: 9px;
+    top: 10px;
+    transition: .2s;
+}
+
+#dropzone_background.has_files + #dropzone_upload {
+    opacity: 1;
+    margin-left: 270px;
+    transition: 0.2s;
+}
+
+#dropzone_background.has_files + #dropzone_upload svg {
+    fill: white;
+    stroke: white;
 }
 
 #dropzone_background p {
-    position: absolute;
+    /*Margin to adjust to dropzone_border*/
+    margin-left: -3px;
+    margin-top: 27px;
+
     width: 500px;
     color: #fff;
     font-size: 30px;
 }
 
 #dropzone_background ul {
+    /*Margin to adjust to dropzone_border*/
+    margin-left: -3px;
+
+    height: 0px;
     position: relative;
-    top: -65px;
+    top: -142px;
     text-align: left;
-    padding: 0px; 
+    margin: 0px;
+    padding: 0px;
+    white-space:nowrap;
+    z-index: 1;
 }
 
 #dropzone_background ul li {
     list-style-type: none;
     padding: 8px;
-    margin-left: 20px;
+    margin-left: 8px;
     border-radius: 20px;
     border: 2px solid #fff;
     color: white;
     display: inline-block;
+    transition: .2s linear;
+
+    animation: fadein 0.2s linear;
+    -moz-animation: fadein 0.2s linear;
+    -webkit-animation: fadein 0.2s linear;
+    -o-animation: fadein 0.2s linear;
 }
 
-ul #files--filename:hover {
-    color: black;
-    cursor: pointer;
-}
-
-
-ul #files--remove {
+#files--remove {
+    display: inline-block;
+    font-weight: bold;
     padding-left: 5px;
     cursor: pointer;
 }
 
-ul #files--remove:hover {
+#files--remove:hover {
     color: black;
+    transition: .5s;
 }
 
 #dropzone {
     width: 100%;
     height: 100%;
     /* outline: 1px solid red; */
+    top: -97px;
+    position: relative;
+    z-index: 1;
 }
+
+@keyframes fadein {from {opacity:0;}to{opacity:1;}}
+@-moz-keyframes fadein {from {opacity:0;}to{opacity:1;}}
+@-webkit-keyframes fadein {from {opacity:0;}to{opacity:1;}}
+@-o-keyframes fadein {from {opacity:0;}to{opacity:1;}}
