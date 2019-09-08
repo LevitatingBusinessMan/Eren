@@ -10,8 +10,8 @@ module.exports = (req, res, next) => {
     }
 
     if(!req.session.logged_in && !req.body.identifier) {
-        RES({code: 401, msg: "Not logged in!"});
-        return res.status(401).send(JSON.stringify({err:"Not logged in!"}));
+        RES({code: 401, msg: "Invalid authentication!"});
+        return res.status(401).send(JSON.stringify({err:"Invalid authentication!"}));
     }
 
     //ShareX call
