@@ -22,7 +22,8 @@ app.use(expressSession({
     secret: "keyboard cat",
     store,
     cookie: {
-        secure: config.force_ssl ? true : false
+        secure: config.force_ssl ? true : false,
+        domain: config.domain
     },
     saveUninitialized: false,
     rolling: true,
