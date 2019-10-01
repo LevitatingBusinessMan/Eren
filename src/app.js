@@ -7,7 +7,8 @@ const fs = require("fs"),
     bodyParser = require("body-parser"),
     expressSession = require("express-session"),
     RDBStore = require("session-rethinkdb")(expressSession),
-    {version} = require(path.join(__dirname, "../package.json"))
+    {version} = require(path.join(__dirname, "../package.json")),
+    dayjs = require("dayjs"),
     config = require(path.join(__dirname, "../config/config"));
 
 const app = express();
@@ -94,6 +95,20 @@ const getID = require(path.join(__dirname, 'routes/GET/getID.js'));
 
 app.get("/signing_up", (req, res) => res.render("index", {message: `If you want to start using Eren yourself you can request a token at: ${config.admin.email},
 or host your own instance: https://github.com/LevitatingBusinessMan/Eren`}));
+
+//Signup page
+app.get("/signup/:id", async (req, res) => {
+    const id = req.params.id;
+    const tokenEntry = await r.table("tokens").get(id).run();
+    if (!tokenEntry)
+        return res.render("index", {message: "Invalid signup token"})
+
+    //Expired token
+    if (dayjs(tokenEntry.expiry).isBefore(dayjs()))
+        return res.render("index", {message: "That token expired"})
+    
+    res.render("signup");
+})
 
 const delete_ = require(path.join(__dirname, 'routes/GET/delete.js'))
 app.get("/delete/:del_key", delete_);

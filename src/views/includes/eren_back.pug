@@ -21,3 +21,14 @@ span#eren_back(onclick="home()")
             width: 30px;
             height: 30px;
         }
+
+    script.
+            function home() {
+                let hostname = window.location.hostname;
+                if (hostname.split(".").length > 2) {
+                    let hostname_array = hostname.split(".");
+                    hostname_array.shift();
+                    hostname = hostname_array.join(".");
+                }
+                location.href = "http://" + hostname;
+            }

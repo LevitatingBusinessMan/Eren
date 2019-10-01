@@ -1,0 +1,76 @@
+html
+    head
+        style
+            include assets/default.css
+            include assets/button.css
+            include assets/signup.css
+        include assets/alerts.pug 
+    body
+        include includes/eren_back.pug
+
+        div#form
+            h1 SIGNUP
+            p You've been invited to create an account at EREN. <br> Please fill out this form to sign up.
+            p Email:
+            input#email(type="text" oninput="checkEmail()")
+            p Password:
+            input#password(type="password" oninput="checkPassConfirm()")
+            p Confirm password:
+            input#password_confirm(type="password" oninput="checkPassConfirm()")
+            <br>
+
+            button.btn.threeD#submit CONTINUE
+        
+        script.
+            
+            const email = document.getElementById("email");
+            const password = document.getElementById("password");
+            const password_confirm = document.getElementById("password_confirm");
+
+            const email_regex = /[a-z,0-9.]+@[a-z,0-9.]+/;
+
+            function checkEmail() {
+
+                //empty input
+                if (!email.value.length) {
+                    email.classList.remove("pass")
+                    email.classList.remove("fail")
+                }
+
+                //Check failed
+                else if (!email.value.match(email_regex)) {
+                    email.classList.remove("pass")
+                    if (!email.classList.contains("fail"))
+                        email.classList.add("fail")
+                }
+
+                //Check passes
+                else {
+                    email.classList.remove("fail")
+                    if (!email.classList.contains("pass"))
+                        email.classList.add("pass")
+                }
+
+            }
+
+            function checkPassConfirm() {
+                //empty input
+                if (!password_confirm.value.length) {
+                    password_confirm.classList.remove("pass")
+                    password_confirm.classList.remove("fail")
+                }
+
+                else if (password.value != password_confirm.value) {
+                    password_confirm.classList.remove("pass")
+                    if (!password_confirm.classList.contains("fail"))
+                        password_confirm.classList.add("fail")
+                }
+                
+                else {
+                    password_confirm.classList.remove("fail")
+                    if (!password_confirm.classList.contains("pass"))
+                        password_confirm.classList.add("pass")
+                }
+
+            }
+
