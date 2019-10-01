@@ -13,6 +13,10 @@ body {
     font-size: 100px;
 }
 
+.hidden {
+    visibility: hidden;
+}
+
 /* Dropdown */
 #options_dropdown {
     position: absolute;
@@ -87,28 +91,6 @@ body {
     -webkit-animation:spin 8s linear infinite;
     -moz-animation:spin 8s linear infinite;
     animation:spin 8s linear infinite;
-}
-
-/* EREN BACK BUTTON */
-
-#eren_back--text{
-    margin-left: 10px;
-    font-size: 36px;
-    font-weight: bold;
-}
-
-#eren_back {
-    cursor: pointer;
-    position: absolute;
-    top: 5px;
-    left: 10px;
-
-}
-
-#eren_back svg {
-    display: inline;
-    width: 30px;
-    height: 30px;
 }
 
 @-ms-keyframes spin { 100% { -moz-transform: rotate(360deg); } }

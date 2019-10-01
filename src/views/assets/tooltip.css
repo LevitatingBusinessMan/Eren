@@ -12,6 +12,8 @@
     position: relative;
     z-index: 5;
 }
+
+/* little pointer */
 .tooltip:hover .tooltiptext::after {
     content: " ";
     position: absolute;

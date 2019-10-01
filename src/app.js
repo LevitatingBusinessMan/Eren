@@ -7,6 +7,7 @@ const fs = require("fs"),
     bodyParser = require("body-parser"),
     expressSession = require("express-session"),
     RDBStore = require("session-rethinkdb")(expressSession),
+    {version} = require(path.join(__dirname, "../package.json"))
     config = require(path.join(__dirname, "../config/config"));
 
 const app = express();
@@ -71,7 +72,8 @@ app.get("/", (req,res) => {
         prefix: config.prefix,
         services: config.services,
         domain: config.domain,
-        user: req.session.user
+        user: req.session.user,
+        version
     }
 
     if (req.subdomains.length) {
@@ -129,7 +131,7 @@ app.post("/s/text", config.services.text ? send(postText) : serviceNotEnabled);
 const postUrl = require(path.join(__dirname, 'routes/POST/postUrl.js'))
 app.post("/s/url", config.services.url ? send(postUrl) : serviceNotEnabled);
 
-app.listen(config.port, () => console.log("Listening on port: " + config.port));
+app.listen(config.port, () => console.log(`Access me at ${config.forceSSL ? "https" : "http"}://${config.domain}:${config.port}`));
 
 //API (endpoints only used by frontend)
 const create_signup_token = require(path.join(__dirname, 'routes/api/create_signup_token.js'))

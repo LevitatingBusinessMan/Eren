@@ -4,13 +4,12 @@ html
             include assets/default.css
             include assets/button.css
             include assets/image.css
+            include assets/tooltip.css
         include assets/alerts.pug 
     body
         h1#title Image
         
-        span#eren_back(onclick="home()")
-            include assets/back.svg.pug
-            span#eren_back--text EREN
+        include includes/eren_back.pug
 
         if logged_in
             div#options_dropdown
@@ -31,6 +30,8 @@ html
             button.btn.threeD(onclick="handleButtonClick()") Open explorer
 
             input#file_input(type="file" accept="image/*" onchange="handleFileUpload()" multiple hidden)
+            <br>
+            ul#resultsbox.hidden
 
         else
             include includes/login_window.pug    
@@ -44,7 +45,8 @@ html
             const dropzone = document.getElementById("dropzone");
             const files_list = document.getElementById("files");
             const file_input = document.getElementById("file_input");
-            const files = {};
+            const results_list = document.getElementById("resultsbox");
+            let files = {};
 
             function handleButtonClick() {
                 file_input.click();
@@ -113,8 +115,10 @@ html
             }
 
             function upload() {
+                const filesLength = Object.keys(files).length;
 
-                for (var fileName in files) {
+                Alert("info", `Uploading ${filesLength} file${filesLength > 1 ? "s" : ""}`)
+                for (let fileName in files) {
 
                     const formData = new FormData();
 
@@ -134,7 +138,12 @@ html
                         else {
                             response.json()
                             .then(response => {
-                                Alert("success", `Successfully uploaded ${fileName}`)
+                                addResult(fileName, response.url)
+
+                                //Reset page
+                                files = {};
+                                dropzone_bg.classList.remove("has_files");
+                                files_list.innerHTML = "";
                             })
                         }
                     });
@@ -142,6 +151,31 @@ html
                 }                
 
                 
+            }
+
+            function addResult(name, src) {
+                if (results_list.classList.contains("hidden"))
+                    results_list.classList.remove("hidden")
+
+                results_list.innerHTML +=
+                    `<li class="result">
+                        <img class="result__preview" src="${src}" />
+                        <span class="result__name">${name}</span>
+                        <span class="result__url tooltip" onclick="copy(this)" onmouseout="resetCopytoolkit(this)">
+                            ${src}
+                            <span class="tooltiptext left">Click to copy</span>
+                        </span>
+                    </li>`;
+            }
+
+            function copy (el) {
+                document.execCommand("copy");
+                document.getSelection().removeAllRanges();
+                el.children[0].innerHTML = "Copied!"
+            }
+
+            function resetCopytoolkit(el) {
+                el.children[0].innerHTML = "Click to copy"
             }
 
             function home() {
