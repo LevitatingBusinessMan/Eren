@@ -97,9 +97,9 @@ app.get("/signing_up", (req, res) => res.render("index", {message: `If you want 
 or host your own instance: https://github.com/LevitatingBusinessMan/Eren`}));
 
 //Signup page
-app.get("/signup/:id", async (req, res) => {
-    const id = req.params.id;
-    const tokenEntry = await r.table("tokens").get(id).run();
+app.get("/signup/:token", async (req, res) => {
+    const token = req.params.token;
+    const tokenEntry = await r.table("tokens").get(token).run();
     if (!tokenEntry)
         return res.render("index", {message: "Invalid signup token"})
 
@@ -151,6 +151,9 @@ app.listen(config.port, () => console.log(`Access me at ${config.forceSSL ? "htt
 //API (endpoints only used by frontend)
 const create_signup_token = require(path.join(__dirname, 'routes/api/create_signup_token.js'))
 app.get("/api/create_token", create_signup_token);
+
+const create_account = require(path.join(__dirname, 'routes/api/create_account.js'))
+app.post("/api/create_account", create_account);
 
 const api_login = require(path.join(__dirname, 'routes/api/login.js'))
 app.post("/api/login", api_login);

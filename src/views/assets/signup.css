@@ -8,12 +8,13 @@ button#submit {
     position: absolute;
     top: calc(50% - 200px);
     left: calc(50% - 250px);
-    height: 440px;
+    height: 450px;
     width: 500px;
     border-radius: 30px;
 }
 
 #form input {
+    font-size: 17px;
     text-align: center;
     background: none;
     width: 200px;
@@ -43,4 +44,54 @@ button#submit {
 
 #form input[type="password"] {
     font-size: 22px;
+}
+
+p.passLabel {
+    margin-bottom: 0;
+}
+
+p#emailLabel {
+    margin-bottom: 10px;
+}
+
+#form p.label {
+    margin-top: 25px;
+}
+
+.question-circle {
+    width: 15px;
+    position: relative;
+    top: 2px;
+    left: 6px;
+}
+
+.question-circle + .tooltiptext {
+    margin-left: 17px;
+    font-weight: normal;
+    font-size: 15px;
+
+    /* login window is relative to the top via percentages anyway */
+    top: 40%;
+}
+
+.shake {
+    animation: shake 1s;
+}
+
+@keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
+  
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+  
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    }
 }

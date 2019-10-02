@@ -132,8 +132,10 @@ html
                         body: formData
                     }).then(response => {
                         if (response.status !== 200) {
+
                             Alert("critical","Something went wrong");
-                            console.log(response.err)
+
+                            console.log(response)
                         }
                         else {
                             response.json()
