@@ -1,0 +1,91 @@
+html
+    head
+        style
+            include assets/default.css
+            include assets/button.css
+        include assets/alerts.pug 
+
+        style.
+            #eren_back {
+                color: #fff;
+                z-index: 1;
+            }
+
+            #eren_back svg {
+                fill: #fff;
+            }
+
+            div#upper_bar {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 50px;
+                background-color: #333;
+                color: #fff;
+            }
+
+            a#email {
+                float: right;
+                margin-right: 10px;
+                font-size: 32px;
+                padding-top: 2px;
+                text-decoration: none;
+                color: #fff;
+            }
+
+            a {
+                transition: color .2s;
+            }
+
+            a:hover {
+                color: #3cf !important;
+            }
+
+            div#vert_bar {
+                position: absolute;
+                left: 0;
+                top: 50px;
+                width: 200px;
+                height: calc(100% - 50px);
+                background-color: #333;
+                color: #fff;
+                padding-top: 23px;
+            }
+
+            #vert_bar a {
+                display: block;
+                text-decoration: none;
+                color: #fff;
+                text-transform: uppercase;
+                margin-bottom: 17px;
+                padding: 10px 0;
+            }
+
+            a#version {
+                position: absolute;
+                bottom: 31px;
+                left: calc(100px - 23px);
+                margin-bottom: 0px;
+            }
+
+    body
+
+        include includes/eren_back.pug
+
+        div#upper_bar
+            a#email(href="/settings/account") #{user}
+        
+        div#vert_bar
+            a#account(href="/settings/account") account
+            a#sharex(href="/settings/sharex") sharex
+            a#uploads(href="/settings/uploads") uploads
+            if admin
+                a#create_signup(href="/settings/create_signup") create signup
+            a#logout(href="/api/logout") logout
+            a#version(href="https://github.com/LevitatingBusinessMan/Eren" target="_blank") V#{version}
+
+        div#content
+
+
+        script.

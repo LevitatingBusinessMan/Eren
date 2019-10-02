@@ -66,12 +66,10 @@ p#emailLabel {
 }
 
 .question-circle + .tooltiptext {
-    margin-left: 17px;
     font-weight: normal;
     font-size: 15px;
-
-    /* login window is relative to the top via percentages anyway */
-    top: 40%;
+    left: 32px;
+    top: -43px;
 }
 
 .shake {

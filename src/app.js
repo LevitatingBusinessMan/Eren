@@ -93,7 +93,9 @@ app.get("/", (req,res) => {
 
 const getID = require(path.join(__dirname, 'routes/GET/getID.js'));
 
-app.get("/signing_up", (req, res) => res.render("index", {message: `If you want to start using Eren yourself you can request a token at: ${config.admin.email},
+app.get("/signing_up", (req, res) =>
+res.render("index", {message: `If you want to start using Eren yourself 
+you can request a token at: ${config.admin.email},
 or host your own instance: https://github.com/LevitatingBusinessMan/Eren`}));
 
 //Signup page
@@ -108,6 +110,18 @@ app.get("/signup/:token", async (req, res) => {
         return res.render("index", {message: "That token expired"})
     
     res.render("signup");
+})
+
+app.get(["/settings", "/settings/:setting"], (req, res) => {
+    if (req.session.logged_in)
+        res.render("settings", {
+            user: req.session.user,
+            admin: req.session.admin,
+            setting: req.params.setting,
+            version
+        })
+
+    else res.redirect("/")
 })
 
 const delete_ = require(path.join(__dirname, 'routes/GET/delete.js'))
@@ -146,7 +160,7 @@ app.post("/s/text", config.services.text ? send(postText) : serviceNotEnabled);
 const postUrl = require(path.join(__dirname, 'routes/POST/postUrl.js'))
 app.post("/s/url", config.services.url ? send(postUrl) : serviceNotEnabled);
 
-app.listen(config.port, () => console.log(`Access me at ${config.forceSSL ? "https" : "http"}://${config.domain}:${config.port}`));
+app.listen(config.port, () => console.log(`Server running at: ${config.forceSSL ? "https" : "http"}://${config.domain}:${config.port}`));
 
 //API (endpoints only used by frontend)
 const create_signup_token = require(path.join(__dirname, 'routes/api/create_signup_token.js'))
