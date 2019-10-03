@@ -6,6 +6,12 @@ body {
     height: 100%;
 }
 
+* {
+    /* This css file was made with content-box,
+    before border-box was the default */
+    box-sizing: content-box !important;
+}
+
 /* DROPZONE */
 
 #dropzone_background {

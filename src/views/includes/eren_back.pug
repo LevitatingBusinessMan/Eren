@@ -6,6 +6,7 @@ span#eren_back(onclick="home()")
             margin-left: 10px;
             font-size: 36px;
             font-weight: bold;
+            transition: color .3s;
         }
 
         #eren_back {
@@ -14,6 +15,18 @@ span#eren_back(onclick="home()")
             top: 5px;
             left: 10px;
 
+        }
+
+        #eren_back:hover #eren_back--text, #eren_back:hover path {
+            color: #3cf;
+        }
+
+        #eren_back:hover path {
+            fill: #3cf;
+        }
+
+        #eren_back path {
+            transition: fill .3s;
         }
 
         #eren_back svg {

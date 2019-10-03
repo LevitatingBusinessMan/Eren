@@ -12,12 +12,7 @@ html
         include includes/eren_back.pug
 
         if logged_in
-            div#options_dropdown
-                p#email_button #{user}
-                div#options_dropdown_content
-                    a#settings(href="/sharex") Create ShareX
-                    a#settings(href="/settings") Settings
-                    a#logout(href="/api/logout") Logout
+            include includes/dropdown.pug
             
             div#dropzone_background
                 p DRAG IMAGE HERE

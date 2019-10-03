@@ -22,3 +22,68 @@
     right: 10px;
     bottom: 10px;
 }
+
+#settings_button {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    cursor: pointer;
+    color: #000;
+}
+
+#settings_button svg{
+    width: 40px;
+}
+
+#settings_button--text {
+    font-size: 33px;
+    position: absolute;
+    margin-left: 5px;
+    transition: color .3s;
+}
+
+#settings_button path {
+    transition: color .3s;
+}
+
+#settings_button:hover svg {
+    animation: spin 2s infinite linear;
+    fill: #3cf;
+}
+
+#settings_button:hover span, #settings_button:hover path {
+    color: #3cf;
+}
+
+/* Login button */
+
+#opener-container {
+    margin-top: 50px;
+    padding: 4px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 8px solid black;
+    position: relative;
+    display: inline-block;
+    box-sizing: content-box;
+}
+
+#opener-container #opener {
+    width: inherit;
+    height: inherit;
+    position: absolute;
+    z-index: 2;
+    left: 4px; /*padding of parent*/
+}
+
+#opener-container #holes {
+    width: 100px;
+    height: 10px;
+    background-color: white;
+    top: 33px;
+    position: absolute;
+    right: -12px;
+
+    animation: spin 8s linear infinite;
+}
