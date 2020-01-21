@@ -56,15 +56,16 @@ div#login_window(style="visibility:hidden;")
                 
                 //non-OK results
                 else {
-                    if (res.status !== 200) {
-                        //note: sadly fetch will always spam every non-200 requests in console
-                        if (res.status == 401) {
-                            Alert("critical", "Wrong password or email");
-                        } else Alert("critical","Some error occured");
-                    }
+                    //note: sadly fetch will always spam every non-200 requests in console
+                    if (res.status == 401) {
+                        Alert("critical", "Wrong password or email");
+                    } 
+                    
+                    else Alert("critical","Some error occured");
+                    
+                    console.log(res)
                 }
             })
-
 
         }
 

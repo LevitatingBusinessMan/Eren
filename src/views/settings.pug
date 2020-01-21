@@ -1,0 +1,188 @@
+html
+    head
+        style
+            include assets/default.css
+            include assets/button.css
+        include assets/alerts.pug 
+
+        style.
+            #eren_back {
+                color: #fff;
+                z-index: 1;
+            }
+
+            #eren_back svg {
+                fill: #fff;
+            }
+
+            div#upper_bar {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 50px;
+                background-color: #333;
+                color: #fff;
+            }
+
+            a#email {
+                float: right;
+                margin-right: 10px;
+                font-size: 32px;
+                padding-top: 2px;
+                text-decoration: none;
+                color: #fff;
+            }
+
+            a {
+                transition: color .2s;
+            }
+
+            a:hover {
+                color: #3cf !important;
+            }
+
+            div#vert_bar {
+                position: absolute;
+                left: 0;
+                top: 50px;
+                width: 200px;
+                height: calc(100% - 50px);
+                background-color: #333;
+                color: #fff;
+                padding-top: 23px;
+                box-sizing: border-box;
+            }
+
+            #vert_bar a {
+                display: block;
+                text-decoration: none;
+                color: #fff;
+                text-transform: uppercase;
+                margin-bottom: 17px;
+                padding: 10px 0;
+            }
+
+            a#version {
+                position: absolute;
+                bottom: 0px;
+                left: calc(100px - 23px);
+                margin-bottom: 0px;
+            }
+
+            div#content {
+                position: absolute;
+                top: 50px;
+                left: 200px;
+                width: calc(100% - 200px);
+                height: calc( 100% - 50px );
+                position: relevant;
+                overflow: hidden;
+            }
+
+            div#home {
+                position: absolute;
+                top: 30%;
+                width: 100%;
+            }
+
+            div#home #welcome {
+                font-size: 100px;
+            }
+
+            div#home #username {
+                animation: flyin_Y 2s, fadein 1.3s;
+                animation-timing-function: ease-out;
+                display: block;
+                font-size: 50px;
+            }
+
+            .cog {
+                color: #ccc;
+                z-index: -1;
+                position: absolute;
+                animation: spin infinite linear;
+            }
+
+            /*.cog:hover {
+                animation-duration: .7s !important;
+            }*/
+
+            #a.cog {
+                animation-duration: 30s;
+                width: 30%;
+                top: 20%;
+                left: -16%;
+            }
+
+            #b.cog {
+                animation-duration: 6s;
+                width: 10%;
+                top: 10%;
+                left: 15%;
+            }
+
+            #c.cog {
+                animation-duration: 15s;
+                width: 20%;
+                top: 50%;
+                right: 10%;
+            }
+
+            #d.cog {
+                animation-duration: 100s;
+                width: 50%;
+                top: -50%;
+                right: -25%;
+            }
+
+            #e.cog {
+                animation-duration: 20s;
+                width: 30%;
+                bottom: -20%;
+                left: 15%;
+            }
+
+    body
+
+        include includes/eren_back.pug
+
+        div#upper_bar
+            a#email(href="/settings/account") #{user}
+        
+        div#vert_bar
+            a#account(href="/settings/account") account
+            a#sharex(href="/settings/sharex") sharex
+            a#uploads(href="/settings/uploads") uploads
+            if admin
+                a#create_signup(href="/settings/create_signup") create signup
+            a#logout(href="/api/logout") logout
+            a#version(href="https://github.com/LevitatingBusinessMan/Eren" target="_blank") V#{version}
+
+        div#content
+            if setting == "account"
+                include includes/settings/account
+            else if setting == "sharex"
+                include includes/settings/sharex
+            else if setting == "uploads"
+                include includes/settings/uploads
+            else if setting == "create_signup"
+                include includes/settings/create_signup
+
+            else
+                div#Home
+                    span#welcome Welcome
+                    span#username #{user.split("@")[0].split(".").map(x => x[0].toUpperCase() + x.substring(1)).join(" ")}
+                    //Ukwnown settings page
+                    if setting
+                        span#error I could not find the page you were looking for
+                div#a.cog
+                    include assets/cog.svg
+                div#b.cog
+                    include assets/cog.svg
+                div#c.cog
+                    include assets/cog.svg
+                div#d.cog
+                    include assets/cog.svg
+                div#e.cog
+                    include assets/cog.svg

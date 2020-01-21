@@ -1,0 +1,47 @@
+span#eren_back(onclick="home()")
+    include ../assets/back.svg.pug
+    span#eren_back--text EREN
+    style.
+        #eren_back--text{
+            margin-left: 10px;
+            font-size: 36px;
+            font-weight: bold;
+            transition: color .3s;
+        }
+
+        #eren_back {
+            cursor: pointer;
+            position: absolute;
+            top: 5px;
+            left: 10px;
+
+        }
+
+        #eren_back:hover #eren_back--text, #eren_back:hover path {
+            color: #3cf;
+        }
+
+        #eren_back:hover path {
+            fill: #3cf;
+        }
+
+        #eren_back path {
+            transition: fill .3s;
+        }
+
+        #eren_back svg {
+            display: inline;
+            width: 30px;
+            height: 30px;
+        }
+
+    script.
+            function home() {
+                let hostname = window.location.hostname;
+                if (hostname.split(".").length > 2) {
+                    let hostname_array = hostname.split(".");
+                    hostname_array.shift();
+                    hostname = hostname_array.join(".");
+                }
+                location.href = "http://" + hostname;
+            }

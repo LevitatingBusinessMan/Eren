@@ -15,12 +15,10 @@ html
         else     
 
             if logged_in
-                div#options_dropdown
-                    p#email_button #{user}
-                    div#options_dropdown_content
-                        a#settings(href="/sharex") Create ShareX
-                        a#settings(href="/settings") Settings
-                        a#logout(href="/api/logout") Logout
+                a#settings_button(href="/settings")
+                    include assets/cog.svg
+                    span#settings_button--text SETTINGS
+                include includes/dropdown.pug
                 div#page_buttons_cont
                     if services.url
                         button#url_button(class="btn threeD page_button" onclick="goto_sub('" + prefix.url +"')") #{prefix.url}
@@ -33,6 +31,7 @@ html
                 div#opener-container
                     button#opener(onclick="activateLoginWindow(this)" class="btn") Login
                     div#holes
+            span#version V#{version}
 
         script. 
 

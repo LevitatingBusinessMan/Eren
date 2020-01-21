@@ -1,0 +1,165 @@
+html
+    head
+        style
+            include assets/default.css
+            include assets/button.css
+            include assets/signup.css
+            include assets/tooltip.css
+        include assets/alerts.pug 
+
+    body
+        include includes/eren_back.pug
+
+        div#form
+            h1 SIGNUP
+            p You've been invited to create an account at EREN. <br> Please fill out this form to sign up.
+            p.label#emailLabel Email:
+            input#email(type="text" oninput="checkEmail()")
+            p.passLabel.label Password:
+                span()
+                //i.fas.fa-question-circle
+                span.tooltip
+                    include assets/question-circle.svg
+                    span.tooltiptext.left.
+                        Password must be at least 8 characters, <br>
+                        must contain at least 1 uppercase <br>
+                        and lowercase letter. <br>
+                        And at least 1 digit. <br>
+                        Special characters are allowed.
+            input#password(type="password" oninput="checkPass();checkPassConfirm()")
+            p.passLabel.label Confirm password:
+            input#password_confirm(type="password" oninput="checkPassConfirm()")
+            <br>
+
+            button.btn.threeD#submit(onclick="submit()") CONTINUE
+        
+        script.
+            
+            const email = document.getElementById("email");
+            const password = document.getElementById("password");
+            const password_confirm = document.getElementById("password_confirm");
+
+            const email_regex = /[a-z,0-9.]+@[a-z,0-9.]+/;
+            const pass_regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
+
+            function checkPass() {
+                
+                //empty input
+                if (!password.value.length) {
+                    password.classList.remove("pass")
+                    password.classList.remove("fail")
+                }
+
+                //Check failed
+                else if (!password.value.match(pass_regex)) {
+                    password.classList.remove("pass")
+                    if (!password.classList.contains("fail"))
+                        password.classList.add("fail")
+                }
+
+                //Check passes
+                else {
+                    password.classList.remove("fail")
+                    if (!password.classList.contains("pass"))
+                        password.classList.add("pass")
+                }
+            }
+
+            function checkEmail() {
+
+                if (!email.value.length) {
+                    email.classList.remove("pass")
+                    email.classList.remove("fail")
+                }
+
+                else if (!email.value.match(email_regex)) {
+                    email.classList.remove("pass")
+                    if (!email.classList.contains("fail"))
+                        email.classList.add("fail")
+                }
+
+                else {
+                    email.classList.remove("fail")
+                    if (!email.classList.contains("pass"))
+                        email.classList.add("pass")
+                }
+
+            }
+
+            function checkPassConfirm() {
+                //empty input
+                if (!password_confirm.value.length) {
+                    password_confirm.classList.remove("pass")
+                    password_confirm.classList.remove("fail")
+                }
+
+                else if (password.value != password_confirm.value) {
+                    password_confirm.classList.remove("pass")
+                    if (!password_confirm.classList.contains("fail"))
+                        password_confirm.classList.add("fail")
+                }
+                
+                else {
+                    password_confirm.classList.remove("fail")
+                    if (!password_confirm.classList.contains("pass"))
+                        password_confirm.classList.add("pass")
+                }
+
+            }
+
+            function submit() {
+                
+                //Validate
+                if (!email.value.match(email_regex)) {
+                    email.classList.add("shake");
+                    setTimeout(() => email.classList.remove("shake"), 1000);
+                }
+
+                if (!password.value.match(pass_regex)) {
+                    password.classList.add("shake");
+                    setTimeout(() => password.classList.remove("shake"), 1000);
+                }
+
+                if (password.value != password_confirm.value) {
+                    password_confirm.classList.add("shake");
+                    setTimeout(() => password_confirm.classList.remove("shake"), 1000);
+                }
+
+                //End submission if validation failed
+                if (password.value != password_confirm.value || !password.value.match(pass_regex) || !email.value.match(email_regex))
+                    return;
+
+                const token = window.location.pathname.split("/")[window.location.pathname.split("/").length - 1];
+
+                fetch("/api/create_account", {
+                    method: "POST",
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        email: email.value,
+                        password: password.value,
+                        autologin: true,
+                        token
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(res => {
+
+                    //OK-results
+                    if (res.ok) {
+                        res.json()
+                            .then(res => {
+                                home();
+                            })
+                    }
+                    
+                    //non-OK results
+                    else {
+                        res.json().then(json => {
+                            if (json.err)
+                                Alert("critical", json.err)
+                            else Alert("critical", "Something went wrong")
+                        }).catch(() => Alert("critical", "Something went wrong"))
+                    }
+                })
+            }

@@ -27,6 +27,7 @@ r.dbList().contains(config.Rethink.db).do(exists => r.branch(exists, {dbs_create
                     email:config.admin.email,
                     password:hash,
                     signup_token:"admin",
+                    admin: true,
                     sharex_tokens:[]
                 }).run()
             })
@@ -40,6 +41,7 @@ User:
     email
     password
     signup_token (to link sharex requests to a user and keep track of which users used which signup tokens)
+    admin (boolean saying if this user is an admin)
     sharex_tokens "array" (gets created whenever a sharex uploader config is made, each can be revoked)
 */
 

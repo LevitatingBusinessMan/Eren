@@ -1,6 +1,6 @@
 const path = require("path");
 const r = require(path.join(__dirname, "../../util/db"));
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
 module.exports = (req, res) => {
     
     //Make sure user is logged out

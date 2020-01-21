@@ -2,6 +2,7 @@
     font-family: montserrat, sans-serif;
     font-weight: 600;
     user-select: none;
+    box-sizing: border-box;
 }
 
 body {
@@ -13,105 +14,18 @@ body {
     font-size: 100px;
 }
 
-/* Dropdown */
-#options_dropdown {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    margin: 20px;
-}
-
-#options_dropdown:hover a {
-    text-align: center;
-    visibility: visible;
-}
-
-#email_button {
-    margin: 0px;
-    cursor: pointer;
-}
-
-#email_button:hover {
-    color: #2196F3;
-}
-
-#options_dropdown_content a {
-    margin-left: 5px;
+.hidden {
     visibility: hidden;
-    background: #ccc;
-    padding: 0px 2px;
-    display: block;
-    text-decoration: none;
-    color: white;
-    text-align: left;
-    width: 200px;
 }
 
+@keyframes spin { 100% { transform: rotate(360deg) } }
 
-#options_dropdown_content a:hover {
-    background: black;
-    color: #2196F3;
-    transition: .2s;
+@keyframes flyin_Y {
+    0% { transform: translateY(20px) }
+    100% { transform: translateY(0px) }
 }
 
-/* Login button */
-
-#opener-container {
-    margin-top: 50px;
-    padding: 4px;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    border: 8px solid black;
-    position: relative;
-    display: inline-block;
+@keyframes fadein {
+    0% { opacity: 0 }
+    100% { opacity: 1}
 }
-
-#opener-container #opener {
-    width: inherit;
-    height: inherit;
-    position: absolute;
-    z-index: 2;
-    left: 4px; /*padding of parent*/
-}
-
-#opener-container #holes {
-    width: 100px;
-    height: 10px;
-    background-color: white;
-    top: 33px;
-    position: absolute;
-    right: -12px;
-
-    -ms-animationspin:spin 8s linear infinite;
-    -webkit-animation:spin 8s linear infinite;
-    -moz-animation:spin 8s linear infinite;
-    animation:spin 8s linear infinite;
-}
-
-/* EREN BACK BUTTON */
-
-#eren_back--text{
-    margin-left: 10px;
-    font-size: 36px;
-    font-weight: bold;
-}
-
-#eren_back {
-    cursor: pointer;
-    position: absolute;
-    top: 5px;
-    left: 10px;
-
-}
-
-#eren_back svg {
-    display: inline;
-    width: 30px;
-    height: 30px;
-}
-
-@-ms-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
-@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
-@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
-@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }

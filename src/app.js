@@ -7,6 +7,8 @@ const fs = require("fs"),
     bodyParser = require("body-parser"),
     expressSession = require("express-session"),
     RDBStore = require("session-rethinkdb")(expressSession),
+    {version} = require(path.join(__dirname, "../package.json")),
+    dayjs = require("dayjs"),
     config = require(path.join(__dirname, "../config/config"));
 
 const app = express();
@@ -71,7 +73,8 @@ app.get("/", (req,res) => {
         prefix: config.prefix,
         services: config.services,
         domain: config.domain,
-        user: req.session.user
+        user: req.session.user,
+        version
     }
 
     if (req.subdomains.length) {
@@ -90,8 +93,36 @@ app.get("/", (req,res) => {
 
 const getID = require(path.join(__dirname, 'routes/GET/getID.js'));
 
-app.get("/signing_up", (req, res) => res.render("index", {message: `If you want to start using Eren yourself you can request a token at: ${config.admin.email},
+app.get("/signing_up", (req, res) =>
+res.render("index", {message: `If you want to start using Eren yourself 
+you can request a token at: ${config.admin.email},
 or host your own instance: https://github.com/LevitatingBusinessMan/Eren`}));
+
+//Signup page
+app.get("/signup/:token", async (req, res) => {
+    const token = req.params.token;
+    const tokenEntry = await r.table("tokens").get(token).run();
+    if (!tokenEntry)
+        return res.render("index", {message: "Invalid signup token"})
+
+    //Expired token
+    if (dayjs(tokenEntry.expiry).isBefore(dayjs()))
+        return res.render("index", {message: "That token expired"})
+    
+    res.render("signup");
+})
+
+app.get(["/settings", "/settings/:setting"], (req, res) => {
+    if (req.session.logged_in)
+        res.render("settings", {
+            user: req.session.user,
+            admin: req.session.admin,
+            setting: req.params.setting,
+            version
+        })
+
+    else res.redirect("/")
+})
 
 const delete_ = require(path.join(__dirname, 'routes/GET/delete.js'))
 app.get("/delete/:del_key", delete_);
@@ -129,11 +160,14 @@ app.post("/s/text", config.services.text ? send(postText) : serviceNotEnabled);
 const postUrl = require(path.join(__dirname, 'routes/POST/postUrl.js'))
 app.post("/s/url", config.services.url ? send(postUrl) : serviceNotEnabled);
 
-app.listen(config.port, () => console.log("Listening on port: " + config.port));
+app.listen(config.port, () => console.log(`Server running at: ${config.forceSSL ? "https" : "http"}://${config.domain}:${config.port}`));
 
 //API (endpoints only used by frontend)
 const create_signup_token = require(path.join(__dirname, 'routes/api/create_signup_token.js'))
 app.get("/api/create_token", create_signup_token);
+
+const create_account = require(path.join(__dirname, 'routes/api/create_account.js'))
+app.post("/api/create_account", create_account);
 
 const api_login = require(path.join(__dirname, 'routes/api/login.js'))
 app.post("/api/login", api_login);

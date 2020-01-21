@@ -1,0 +1,47 @@
+div#options_dropdown
+    p#email_button #{user}
+    div#options_dropdown_content
+        a#settings(href="/settings") Settings
+        a#logout(href="/api/logout") Logout
+
+style. 
+    /* Dropdown */
+    #options_dropdown {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        margin: 20px;
+    }
+
+    #options_dropdown:hover a {
+        text-align: center;
+        visibility: visible;
+    }
+
+    #email_button {
+        margin: 0px;
+        cursor: pointer;
+    }
+
+    #email_button:hover {
+        color: #2196F3;
+    }
+
+    #options_dropdown_content a {
+        text-transform: uppercase;
+        margin-left: 5px;
+        visibility: hidden;
+        background: #ccc;
+        padding: 0px 2px;
+        display: block;
+        text-decoration: none;
+        color: white;
+        text-align: left;
+        width: 200px;
+    }
+
+
+    #options_dropdown_content a:hover {
+        color: #2196F3;
+        transition: .2s;
+    }
