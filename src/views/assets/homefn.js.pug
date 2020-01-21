@@ -1,0 +1,18 @@
+script.
+	function home() {
+		let hostname = window.location.hostname;
+		
+		//Subdomains
+		if (hostname.split(".").length > 2) {
+			let hostname_array = hostname.split(".");
+			hostname_array.shift();
+			hostname = hostname_array.join(".");
+		}
+
+		//Ports
+		if (location.port != "443" && location.port != "80")
+			hostname += ":" + location.port;
+
+		location.href = location.protocol + "//" + hostname;
+		
+	}

@@ -5,6 +5,7 @@ html
             include assets/index.css
             include assets/button.css
         include assets/alerts.pug 
+        include assets/homefn.js.pug
 
     body
         h1#title EREN
@@ -37,16 +38,6 @@ html
 
                 //Refresh page after login
                 login_cb = home;
-
-                function home() {
-                    let hostname = window.location.hostname;
-                    if (hostname.split(".").length > 2) {
-                        let hostname_array = hostname.split(".");
-                        hostname_array.shift();
-                        hostname = hostname_array.join(".");
-                    }
-                    location.href = "http://" + hostname;
-                }
 
                 function goto_sub(sub) {
                     location.href = `http://${sub}.#{domain}`;

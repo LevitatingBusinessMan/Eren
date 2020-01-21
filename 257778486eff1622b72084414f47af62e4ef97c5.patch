@@ -1,0 +1,145 @@
+From 257778486eff1622b72084414f47af62e4ef97c5 Mon Sep 17 00:00:00 2001
+From: Rein F <public@reinfernhout.xyz>
+Date: Tue, 21 Jan 2020 15:01:23 +0100
+Subject: [PATCH] better home function
+
+---
+ src/views/assets/homefn.js.pug   | 18 ++++++++++++++++++
+ src/views/image.pug              |  3 ++-
+ src/views/includes/eren_back.pug | 11 +----------
+ src/views/index.pug              |  1 +
+ src/views/settings.pug           |  3 ++-
+ src/views/signup.pug             |  3 ++-
+ src/views/text.pug               | 11 +----------
+ 7 files changed, 27 insertions(+), 23 deletions(-)
+ create mode 100644 src/views/assets/homefn.js.pug
+
+diff --git a/src/views/assets/homefn.js.pug b/src/views/assets/homefn.js.pug
+new file mode 100644
+index 0000000..8b9cc9f
+--- /dev/null
++++ b/src/views/assets/homefn.js.pug
+@@ -0,0 +1,18 @@
++script.
++	function home() {
++		let hostname = window.location.hostname;
++		
++		//Subdomains
++		if (hostname.split(".").length > 2) {
++			let hostname_array = hostname.split(".");
++			hostname_array.shift();
++			hostname = hostname_array.join(".");
++		}
++
++		//Ports
++		if (location.port != "443" && location.port != "80")
++			hostname += ":" + location.port;
++
++		location.href = location.protocol + "//" + hostname;
++		
++	}
+\ No newline at end of file
+diff --git a/src/views/image.pug b/src/views/image.pug
+index 5293d05..57c400d 100644
+--- a/src/views/image.pug
++++ b/src/views/image.pug
+@@ -5,7 +5,8 @@ html
+             include assets/button.css
+             include assets/image.css
+             include assets/tooltip.css
+-        include assets/alerts.pug 
++        include assets/alerts.pug
++        include assets/homefn.js.pug
+     body
+         h1#title Image
+         
+diff --git a/src/views/includes/eren_back.pug b/src/views/includes/eren_back.pug
+index 94433d4..a219434 100644
+--- a/src/views/includes/eren_back.pug
++++ b/src/views/includes/eren_back.pug
+@@ -35,13 +35,4 @@ span#eren_back(onclick="home()")
+             height: 30px;
+         }
+ 
+-    script.
+-            function home() {
+-                let hostname = window.location.hostname;
+-                if (hostname.split(".").length > 2) {
+-                    let hostname_array = hostname.split(".");
+-                    hostname_array.shift();
+-                    hostname = hostname_array.join(".");
+-                }
+-                location.href = "http://" + hostname;
+-            }
+\ No newline at end of file
++    include ../assets/homefn.js.pug
+\ No newline at end of file
+diff --git a/src/views/index.pug b/src/views/index.pug
+index 5dd4f0a..e94905a 100644
+--- a/src/views/index.pug
++++ b/src/views/index.pug
+@@ -5,6 +5,7 @@ html
+             include assets/index.css
+             include assets/button.css
+         include assets/alerts.pug 
++        include assets/homefn.js.pug
+ 
+     body
+         h1#title EREN
+diff --git a/src/views/settings.pug b/src/views/settings.pug
+index 625f31d..7b7ccf9 100644
+--- a/src/views/settings.pug
++++ b/src/views/settings.pug
+@@ -3,7 +3,8 @@ html
+         style
+             include assets/default.css
+             include assets/button.css
+-        include assets/alerts.pug 
++        include assets/alerts.pug
++        include assets/homefn.js.pug
+ 
+         style.
+             #eren_back {
+diff --git a/src/views/signup.pug b/src/views/signup.pug
+index ff007fa..eafcb91 100644
+--- a/src/views/signup.pug
++++ b/src/views/signup.pug
+@@ -5,7 +5,8 @@ html
+             include assets/button.css
+             include assets/signup.css
+             include assets/tooltip.css
+-        include assets/alerts.pug 
++        include assets/alerts.pug
++        include assets/homefn.js.pug
+ 
+     body
+         include includes/eren_back.pug
+diff --git a/src/views/text.pug b/src/views/text.pug
+index a247a9a..7358fda 100644
+--- a/src/views/text.pug
++++ b/src/views/text.pug
+@@ -7,6 +7,7 @@ html
+             include assets/text.css
+             include assets/toggle.css
+         include assets/alerts.pug
++        include assets/homefn.js.pug
+     body
+ 
+         include includes/login_window.pug
+@@ -129,16 +130,6 @@ html
+                     ln_cnr.innerHTML += i + "<br/>";
+             }
+ 
+-            function home() {
+-                let hostname = window.location.hostname;
+-                if (hostname.split(".").length > 2) {
+-                    let hostname_array = hostname.split(".");
+-                    hostname_array.shift();
+-                    hostname = hostname_array.join(".");
+-                }
+-                location.href = "http://" + hostname;
+-            }
+-
+             function save(btn) {
+ 
+                 if (!session.logged_in) {
