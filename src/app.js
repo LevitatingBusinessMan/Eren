@@ -113,13 +113,24 @@ app.get("/signup/:token", async (req, res) => {
 })
 
 app.get(["/settings", "/settings/:setting"], (req, res) => {
-    if (req.session.logged_in)
-        res.render("settings", {
+    if (req.session.logged_in) {
+
+        const data = {
             user: req.session.user,
             admin: req.session.admin,
             setting: req.params.setting,
             version
-        })
+        }
+
+        //If sharex setting, also send sharex and signup tokens
+        if (req.params.setting == "sharex")
+            r.table("users").get(req.session.user)
+            .then(u => res.render("settings", Object.assign(data, {sharex_token, signup_token} = u)))
+            .catch(err => err ? res.render("index", {msg: "Page failed to load :("}) : null)
+        
+        else res.render("settings", data)
+
+    }
 
     else res.redirect("/")
 })

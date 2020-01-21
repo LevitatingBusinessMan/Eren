@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
     }
 
     //ShareX call
-    //In a ShareX request is an identifier, which is the users signup token, and an access token which is one of the users sharex_tokens
+    //In a ShareX request is an identifier, which is the users signup token, and an access token which is the users sharex_token
     if (req.body.identifier) {
 
         if(!req.body.sharex_token) {

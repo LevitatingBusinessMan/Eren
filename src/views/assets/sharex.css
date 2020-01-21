@@ -1,0 +1,73 @@
+.hljs-attr {
+    color: #00b300;
+}
+
+.hljs-string {
+    padding-left: .2em;
+    color: #0cc;
+}
+
+/* everything hljs didn't name */
+.hljs {
+    color: #c00;
+}
+
+#description {
+    margin-top: 130px;
+}
+
+#containers {
+    margin-top: 50px;
+}
+
+.container {
+    display: inline-block;
+    margin: 0px 20px;
+}
+
+.container--json {
+    display: block;
+    padding: 0.5em;
+    text-align: left;
+    font-size: 15px;
+    background-color: #eee;
+    border-radius: 5px;
+}
+
+#sharex_token {
+    display: block;
+    position: relative;
+    top: 90px;
+    font-size: 20px;
+}
+
+#sharex_token--title {
+    color: #fff;
+    background-color: #3cf;
+    padding: 10px;
+    border: 2px solid #00ace6;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+#sharex_token--token {
+    color: #000;
+    background-color: #fff;
+    padding: 10px;
+    border-top: 2px solid #aaa;
+    border-bottom: 2px solid #aaa;
+}
+
+#sharex_token--remake{
+    color: #fff;
+    background-color: #f33;
+    padding: 10px;
+    border: 2px solid #c00;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.container--title {
+    font-size: 30px;
+    text-transform: uppercase;
+}

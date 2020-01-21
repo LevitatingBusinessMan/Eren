@@ -1,6 +1,6 @@
-const path = require("path");
-const config = require(path.join(__dirname, "../../config/config"));
+const config = require("../../config/config");
 const bcrypt = require("bcrypt");
+const newID = require("./idCreator");
 const r = require("rethinkdbdash")(config.Rethink);
 
 //Check if DB exists
@@ -28,7 +28,7 @@ r.dbList().contains(config.Rethink.db).do(exists => r.branch(exists, {dbs_create
                     password:hash,
                     signup_token:"admin",
                     admin: true,
-                    sharex_tokens:[]
+                    sharex_token: newID(20)
                 }).run()
             })
     }))
@@ -42,7 +42,7 @@ User:
     password
     signup_token (to link sharex requests to a user and keep track of which users used which signup tokens)
     admin (boolean saying if this user is an admin)
-    sharex_tokens "array" (gets created whenever a sharex uploader config is made, each can be revoked)
+    sharex_token (API key to allow access from sharex, can be remade)
 */
 
 module.exports = r;

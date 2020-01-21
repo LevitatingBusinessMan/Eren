@@ -5,7 +5,7 @@ const chalk = require("chalk");
 const image = {
     Name: "Eren image upload",
     DestinationType: "ImageUploader",
-    RequestURL: `${cf.ssl ? "https" : "http"}://sharex.${cf.domain}/s/image`,
+    RequestURL: `https://${cf.domain}/s/image`,
     FileFormName: "image",
     Arguments: {
       key: "access-key-here"

@@ -1,1 +1,90 @@
-test
+script
+    include ../../assets/hljs_json.js
+script hljs.initHighlightingOnLoad()
+style
+    include ../../assets/sharex.css
+
+span#sharex_token
+    span#sharex_token--title ShareX token
+    span#sharex_token--token #{sharex_token}
+    span#sharex_token--remake RE
+
+p#description.
+    Here you can download your custom ShareX uploader.<br>
+    With this you can configure ShareX to upload your screenshots to Eren.<br>
+    The token shown above is to be kept private. Anyone with this token can upload to Eren through your account.<br>
+    This token can be regenerated with the red button.
+    
+
+div#containers
+    div.container#url
+        span.container--title url
+        pre.container--json.JSON#URL--JSON
+        button.container-download DOWNLOAD
+    div.container#image
+        span.container--title image
+        pre.container--json.JSON#IMAGE--JSON
+        button.container-download DOWNLOAD
+    div.container#code
+        span.container--title code
+        pre.container--json.JSON#CODE--JSON
+        button.container-download DOWNLOAD
+
+script.
+    const url = document.getElementById("URL--JSON");
+    const image = document.getElementById("IMAGE--JSON");
+    const code = document.getElementById("CODE--JSON");
+
+    function loadJSON () {
+        var image_uploader =
+        `{
+            "Name": "Eren image upload",
+            "DestinationType": "ImageUploader",
+            "RequestURL": "https://${window.location.hostname}/s/image",
+            "FileFormName": "image",
+            "Arguments": {
+                "identifier": "#{signup_token}",
+                "sharex_token": "#{sharex_token}"
+            },
+            "URL": "$json:url$",
+            "DeletionURL": "$json:delete$"
+        }`
+
+        var text_uploader = 
+        `{
+            "Name": "Eren text upload",
+            "DestinationType": "URLShortener",
+            "RequestURL": "https://${window.location.hostname}/s/text",
+            "Arguments": {
+                "text": "$inpu$",
+                "identifier": "#{signup_token}",
+                "sharex_token": "#{sharex_token}"
+            },
+            "URL": "$json:url$",
+            "DeletionURL": "$json:delete$"
+        }`
+
+        var url_uploader = 
+        `{
+            "Name": "Eren url shorten",
+            "DestinationType": "URLShortener",
+            "RequestURL": "https://${window.location.hostname}/s/url",
+            "Arguments": {
+                "url": "$inpu$",
+                "identifier": "#{signup_token}",
+                "sharex_token": "#{sharex_token}"
+            },
+            "URL": "$json:url$",
+            "DeletionURL": "$json:delete$"
+        }`
+
+        image.innerHTML = image_uploader;
+        code.innerHTML = text_uploader;
+        url.innerHTML = url_uploader;
+
+        hljs.highlightBlock(image);
+        hljs.highlightBlock(code);
+        hljs.highlightBlock(url);
+    }
+
+    loadJSON();
