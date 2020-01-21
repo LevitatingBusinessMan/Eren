@@ -7,6 +7,7 @@ html
             include assets/text.css
             include assets/toggle.css
         include assets/alerts.pug
+        include assets/homefn.js.pug
     body
 
         include includes/login_window.pug
@@ -127,16 +128,6 @@ html
                 ln_cnr.innerHTML = "";
                 for (let i = 1; i < lines+1; i++)
                     ln_cnr.innerHTML += i + "<br/>";
-            }
-
-            function home() {
-                let hostname = window.location.hostname;
-                if (hostname.split(".").length > 2) {
-                    let hostname_array = hostname.split(".");
-                    hostname_array.shift();
-                    hostname = hostname_array.join(".");
-                }
-                location.href = "http://" + hostname;
             }
 
             function save(btn) {
